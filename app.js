@@ -41,6 +41,109 @@ function initEvalTab(){
     if(!list.length) box.innerHTML='<div class="empty-state" style="height:120px">해당 조건의 인원이 없습니다.</div>';
   }
   renderMembers();
+  // 직무 내 역량분포 버튼
+  $('#btnJobDist').onclick=showJobDistribution;
+}
+
+// ===== 직무 내 역량분포 뷰 =====
+const GRADE_ORDER=["S상","S중","S하","A상","A중","A하","B상","B중","B하","C상","C중","C하","D상","D중","D하"];
+function scoreToGrade(score){ // 종합점수(4점)→ 등급 (자동 배치 fallback)
+  const idx=Math.min(14,Math.max(0,Math.round((4-score)/4*14)));
+  return GRADE_ORDER[idx];
+}
+function showJobDistribution(){
+  const g=$('#evalGroupSel').value,t=$('#evalTeamSel').value,j=$('#evalJobSel').value;
+  let list=allMembers();
+  if(g) list=list.filter(m=>m.group===g);
+  if(t) list=list.filter(m=>m.team===t);
+  if(j) list=list.filter(m=>m.job===j);
+  if(!list.length){ $('#evalContent').innerHTML='<div class="empty-state">해당 조건의 인원이 없습니다.</div>'; return; }
+  $$('.member-item').forEach(x=>x.classList.remove('selected'));
+
+  const scope=[g,t,j].filter(Boolean).join(' · ')||'전체';
+  const avgAll=list.reduce((s,m)=>s+totalScore(m.name),0)/list.length;
+
+  // 등급별 그룹핑 (확정값 우선, 없으면 자동)
+  const byGrade={}; GRADE_ORDER.forEach(gr=>byGrade[gr]=[]);
+  let confirmedCnt=0;
+  list.forEach(m=>{
+    let grade=CONFIRMED_POS[m.name];
+    if(grade) confirmedCnt++; else grade=scoreToGrade(totalScore(m.name));
+    (byGrade[grade]=byGrade[grade]||[]).push({name:m.name,confirmed:!!CONFIRMED_POS[m.name]});
+  });
+
+  $('#evalContent').innerHTML=`
+    <div class="detail-header"><h2>직무 내 역량분포</h2><span class="sub">${scope} · ${list.length}명</span></div>
+    <div class="dist-grid">
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <h3>역량 포지셔닝 분포</h3>
+          <span class="dist-note">채용 타겟팅 · 직무 경쟁력 진단용</span>
+        </div>
+        <div id="distPayband" class="dist-payband"></div>
+        <p class="dist-legend">${confirmedCnt<list.length?`<span class="badge-auto">자동</span> 표시는 미확정(종합점수 환산). `:''}<span class="badge-conf">확정</span>은 인사위원회 확정 등급.</p>
+      </div>
+      <div class="dist-card">
+        <div class="dist-card-head">
+          <h3>항목별 점수 분포</h3>
+          <span class="dist-big">평균 ${avgAll.toFixed(2)}<small>/4.0</small></span>
+        </div>
+        <div id="distLines"></div>
+      </div>
+    </div>`;
+  renderDistPayband(byGrade);
+  renderDistLines(list);
+}
+function renderDistPayband(byGrade){
+  const box=$('#distPayband'); box.innerHTML='';
+  // 등급을 5개 대분류(S~D)로 묶어 세로 배치, 각 칸에 인원 칩
+  const majors=[["S","S"],["A","A"],["B","B"],["C","C"],["D","D"]];
+  majors.forEach(([mg])=>{
+    const subs=["상","중","하"].map(p=>mg+p);
+    const people=subs.flatMap(sg=>(byGrade[sg]||[]).map(x=>({...x,sub:sg.slice(1)})));
+    const row=document.createElement('div'); row.className='dpb-row'; row.dataset.g=mg;
+    const chips=people.map(p=>`<span class="dpb-chip ${p.confirmed?'':'auto'}">${p.name}<em>${p.sub}</em></span>`).join('');
+    row.innerHTML=`<div class="dpb-glabel">${mg}</div><div class="dpb-people">${chips||'<span class="dpb-empty">해당 없음</span>'}</div>
+      <div class="dpb-count">${people.length}명</div>`;
+    box.appendChild(row);
+  });
+}
+function renderDistLines(list){
+  const box=$('#distLines');
+  const cats=[['인재상',ITEMS.인재상],['공통역량',ITEMS.공통역량],['직무역량',ITEMS.직무역량]];
+  const allItems=cats.flatMap(([_,arr])=>arr);
+  const W=560,H=240,padL=40,padR=20,padT=20,padB=54;
+  const n=allItems.length;
+  const xStep=(W-padL-padR)/(n-1);
+  const yFor=v=>padT+(H-padT-padB)*(1-(v-1)/3); // 1~4 → y
+  // 각 인원 폴리라인
+  const colors=['#1E3A5F','#B4690E','#1E6B4F','#8E6FB0','#B03A2E','#3A3A3A','#2E5C8A','#A06520'];
+  const memScores=list.map(m=>{
+    const e=EVAL[m.name];
+    return { name:m.name, pts:allItems.map(it=>{
+      const all=[...e.down,...e.peer,(e.self?[e.self]:[]),...e.collab].flat().filter(ev=>ev.scores[it.id]!=null);
+      return all.length? all.reduce((a,b)=>a+b.scores[it.id],0)/all.length : null;
+    })};
+  });
+  // 평균선
+  const avgPts=allItems.map((it,i)=>{ const vals=memScores.map(m=>m.pts[i]).filter(v=>v!=null); return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null; });
+  let svg=`<svg viewBox="0 0 ${W} ${H}" class="dist-svg">`;
+  // 그리드 (1~4)
+  for(let v=1;v<=4;v++){ const y=yFor(v); svg+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/><text x="${padL-8}" y="${y+3}" text-anchor="end" font-size="9" fill="#9CA3AF">${v}</text>`; }
+  // 각 인원선 (얇게, 반투명)
+  memScores.forEach((m,mi)=>{
+    const pts=m.pts.map((v,i)=>v!=null?`${padL+i*xStep},${yFor(v)}`:null).filter(Boolean).join(' ');
+    svg+=`<polyline points="${pts}" fill="none" stroke="${colors[mi%colors.length]}" stroke-width="1.5" opacity="0.45"/>`;
+  });
+  // 평균선 (굵게, 검정 점선)
+  const avgLine=avgPts.map((v,i)=>v!=null?`${padL+i*xStep},${yFor(v)}`:null).filter(Boolean).join(' ');
+  svg+=`<polyline points="${avgLine}" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 3"/>`;
+  avgPts.forEach((v,i)=>{ if(v!=null) svg+=`<circle cx="${padL+i*xStep}" cy="${yFor(v)}" r="3" fill="#1A1A1A"/>`; });
+  // x축 라벨
+  allItems.forEach((it,i)=>{ const x=padL+i*xStep;
+    svg+=`<text x="${x}" y="${H-padB+16}" text-anchor="end" font-size="8.5" fill="#6B7280" transform="rotate(-40 ${x} ${H-padB+16})">${it.name}</text>`; });
+  svg+=`</svg>`;
+  box.innerHTML=svg+`<p class="dist-legend"><span style="border-top:2.5px dashed #1A1A1A;display:inline-block;width:20px;vertical-align:middle"></span> 직무 평균 · 얇은 선은 개인별</p>`;
 }
 
 function showEvalDetail(name){
@@ -51,26 +154,23 @@ function showEvalDetail(name){
   const total=totalScore(name);
 
   content.innerHTML=`
-    <div class="detail-header"><h2>${name}</h2><span class="sub">${m.group} · ${m.team} · ${m.job}</span></div>
-    <div class="total-score-card">
-      <div class="big">${total.toFixed(2)}<small> / 4.0</small></div>
-      <div class="breakdown">
-        <div class="bd-item"><div class="v">${downAvg?downAvg.toFixed(2):'-'}</div><div class="l">하향</div></div>
-        <div class="bd-item"><div class="v">${peerAvg?peerAvg.toFixed(2):'-'}</div><div class="l">동료</div></div>
-        <div class="bd-item"><div class="v">${selfAvg?selfAvg.toFixed(2):'-'}</div><div class="l">본인</div></div>
-        <div class="bd-item"><div class="v">${collabAvg?collabAvg.toFixed(2):'-'}</div><div class="l">협업</div></div>
+    <div class="detail-header compact">
+      <h2>${name}</h2><span class="sub">${m.group} · ${m.team} · ${m.job}</span>
+      <div class="dh-score"><span class="dh-big">${total.toFixed(2)}</span><span class="dh-max">/4.0</span></div>
+    </div>
+    <div class="person-compact">
+      <div class="pc-sections">
+        <div class="mini-sec down"><span class="dot"></span>하향 <b>${downAvg?downAvg.toFixed(2):'-'}</b><em>${e.down.length}명</em></div>
+        <div class="mini-sec peer"><span class="dot"></span>동료 <b>${peerAvg?peerAvg.toFixed(2):'-'}</b><em>${e.peer.length}명</em></div>
+        <div class="mini-sec self"><span class="dot"></span>본인 <b>${selfAvg?selfAvg.toFixed(2):'-'}</b><em>${e.self?1:0}명</em></div>
+        <div class="mini-sec collab"><span class="dot"></span>협업 <b>${collabAvg?collabAvg.toFixed(2):'-'}</b><em>${e.collab.length}명</em></div>
       </div>
+      <div class="view-tabs">
+        <button class="view-tab active" data-v="item">문항별</button>
+        <button class="view-tab" data-v="evaluator">평가자별</button>
+      </div>
+      <div id="viewArea"></div>
     </div>
-    <div class="eval-sections">
-      ${secCard('down','하향 평가',e.down,downAvg)}
-      ${secCard('peer','동료 평가',e.peer,peerAvg)}
-      ${secCard('self','본인 평가',e.self?[e.self]:[],selfAvg)}
-    </div>
-    <div class="view-tabs">
-      <button class="view-tab active" data-v="item">문항별 보기</button>
-      <button class="view-tab" data-v="evaluator">평가자별 보기</button>
-    </div>
-    <div id="viewArea"></div>
   `;
   $$('.view-tab',content).forEach(b=>b.onclick=()=>{ $$('.view-tab',content).forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderView(b.dataset.v,name); });
   renderView('item',name);
@@ -83,26 +183,28 @@ function secCard(cls,title,arr,avg){
 function renderView(v,name){
   const e=EVAL[name],m=allMembers().find(x=>x.name===name),area=$('#viewArea');
   if(v==='item'){
-    // 문항별: 각 문항 전체평가자 평균 + 동일직무 평균
-    let html='<div class="item-graph">';
-    ['인재상','공통역량','직무역량'].forEach(cat=>{
-      html+=`<h4 style="margin:16px 0 10px;font-size:13px">${cat}</h4>`;
-      ITEMS[cat].forEach(it=>{
+    // 3열 컬럼(인재상/공통/직무)으로 압축 배치
+    let html='<div class="item-cols">';
+    [['인재상',ITEMS.인재상],['공통역량',ITEMS.공통역량],['직무역량',ITEMS.직무역량]].forEach(([cat,arr])=>{
+      html+=`<div class="item-col"><h5>${cat}</h5>`;
+      arr.forEach(it=>{
         const all=[...e.down,...e.peer,(e.self?[e.self]:[]),...e.collab].flat().filter(ev=>ev.scores[it.id]!=null);
         const myAvg=all.length? all.reduce((a,b)=>a+b.scores[it.id],0)/all.length:0;
         const jobAvg=jobAverage(m.job,it.id);
         const pct=(myAvg/4*100), avgPct=(jobAvg/4*100);
+        const diff=myAvg-jobAvg;
         html+=`<div class="item-row">
           <div class="item-label"><span class="name">${it.name}</span>
-            <span class="scores">내 ${myAvg.toFixed(2)} · 직무평균 ${jobAvg.toFixed(2)}</span></div>
+            <span class="scores ${diff>=0?'up':'down'}">${myAvg.toFixed(1)} <em>(${diff>=0?'+':''}${diff.toFixed(1)})</em></span></div>
           <div class="bar-track">
-            <div class="bar-fill" style="width:${pct}%">${myAvg.toFixed(1)}</div>
+            <div class="bar-fill" style="width:${pct}%"></div>
             <div class="bar-avg" style="left:${avgPct}%"></div>
-            <div class="bar-avg-label" style="left:${avgPct}%">평균</div>
           </div></div>`;
       });
+      html+='</div>';
     });
-    html+='</div>'; area.innerHTML=html;
+    html+='</div><p class="item-foot"><span class="bar-avg-legend"></span> 빨간 선 = 직무 평균 · 괄호는 평균 대비 편차</p>';
+    area.innerHTML=html;
   } else {
     // 평가자별
     let html='';
@@ -144,7 +246,7 @@ function loadCompMembers(){
   // 종합점수 내림차순
   list.sort((a,b)=>totalScore(b.name)-totalScore(a.name));
   compState.members=list; compState.grades={}; compState.logicShown=false;
-  $('#posBox').style.display=list.length?'block':'none';
+  $('#posSection').style.display=list.length?'block':'none';
   $('#logicTableWrap').style.display='none';
   renderRankList(); renderPosAssign(); renderPayband();
   setStep(1);
@@ -173,13 +275,13 @@ function addDrag(li){
 }
 function renderPosAssign(){
   const box=$('#posAssign'); box.innerHTML='';
-  compState.members.forEach(m=>{
+  compState.members.forEach((m,i)=>{
     const row=document.createElement('div'); row.className='pos-assign-row';
     const sel=document.createElement('select');
     sel.add(new Option('포지션 선택','')); SUBGRADES.forEach(sg=>sel.add(new Option(sg,sg)));
     sel.value=compState.grades[m.name]||'';
-    sel.onchange=()=>{ compState.grades[m.name]=sel.value; renderPayband(); };
-    row.innerHTML=`<span class="pa-name">${m.name}</span>`;
+    sel.onchange=()=>{ compState.grades[m.name]=sel.value; CONFIRMED_POS[m.name]=sel.value; renderPayband(); };
+    row.innerHTML=`<span class="pa-rank">${i+1}</span><span class="pa-name">${m.name}</span>`;
     row.appendChild(sel); box.appendChild(row);
   });
 }

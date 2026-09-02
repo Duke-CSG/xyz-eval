@@ -108,7 +108,18 @@ function seedEval(){
 }
 const EVAL = seedEval();
 
-// 동일 직무자 평균 (문항별)
+// 확정된 역량 포지셔닝 (보상 탭에서 확정 → 평가 탭 직무분포에서 조회)
+// 실제 운영 시 이 값도 data.js에 저장하거나 서버 연동. 지금은 세션 내 공유.
+const CONFIRMED_POS = {};  // { 이름: "A상" }
+// 시연용 샘플 확정값 (실제로는 보상탭 인사위원회에서 확정)
+Object.assign(CONFIRMED_POS, {
+  "김서연":"A중","이준호":"B상","박민지":"B하",
+  "최우진":"A상","정하늘":"B중","강도현":"B중","윤서준":"C상",
+  "임채원":"A중","한지우":"C상",
+  "오세훈":"C중","신유나":"C하",
+  "배준영":"B상","곽민서":"C상","조은채":"C중",
+  "남기태":"B중","문서영":"C상","구본우":"B하"
+});
 function jobAverage(jobName, itemId){
   const peers=Object.keys(JOB).filter(n=>JOB[n]===jobName);
   let sum=0,cnt=0;
