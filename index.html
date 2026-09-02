@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XYZ 평가·보상 시스템</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">XYZ</span>
+    <span class="brand-title">평가 · 보상 시스템</span>
+    <span class="brand-period">2025 하반기</span>
+  </div>
+  <nav class="mainnav">
+    <button class="navtab active" data-tab="eval">평가 조회</button>
+    <button class="navtab" data-tab="comp">보상 의사결정</button>
+  </nav>
+</header>
+
+<!-- ============ 평가 조회 탭 ============ -->
+<main id="tab-eval" class="tab-panel active">
+  <div class="layout">
+    <!-- 좌: 팀/직무 선택 + 피평가자 목록 -->
+    <aside class="sidebar">
+      <div class="field">
+        <label>팀 · 직무 선택</label>
+        <input type="text" id="evalSearch" placeholder="이름·팀·직무 검색" autocomplete="off">
+      </div>
+      <div class="field">
+        <select id="evalGroupSel"><option value="">전체 그룹</option></select>
+        <select id="evalTeamSel"><option value="">전체 팀</option></select>
+        <select id="evalJobSel"><option value="">전체 직무</option></select>
+      </div>
+      <div class="member-list" id="evalMemberList"></div>
+    </aside>
+
+    <!-- 우: 피평가자 평가 상세 -->
+    <section class="content" id="evalContent">
+      <div class="empty-state">
+        <p>좌측에서 팀·직무를 선택하고 피평가자를 고르세요.</p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ 보상 의사결정 탭 ============ -->
+<main id="tab-comp" class="tab-panel">
+  <div class="comp-toolbar">
+    <div class="field-inline">
+      <label>팀 · 직무</label>
+      <select id="compGroupSel"><option value="">그룹 선택</option></select>
+      <select id="compTeamSel"><option value="">팀 선택</option></select>
+      <select id="compJobSel"><option value="">직무 선택</option></select>
+    </div>
+    <div class="step-indicator">
+      <span class="step active" data-step="1">1. 우열 · 그룹핑</span>
+      <span class="step" data-step="2">2. 역량 포지셔닝</span>
+      <span class="step" data-step="3">3. 로직 인상액</span>
+      <span class="step" data-step="4">4. 보정 · 확정</span>
+    </div>
+  </div>
+
+  <div class="comp-body">
+    <!-- 좌: 우열 리스트 (드래그) + 포지셔닝 -->
+    <section class="comp-left">
+      <div class="panel-head">
+        <h3>역량 우열 <small>동일 직무자 · 종합점수 순 · 드래그로 보정</small></h3>
+        <button class="btn-ghost" id="btnGroupToggle">같은 포지션 묶기</button>
+      </div>
+      <ol class="rank-list" id="rankList"></ol>
+      <div class="posbox" id="posBox" style="display:none">
+        <h4>역량 포지셔닝 <small>우등자부터 S상~D하 지정</small></h4>
+        <div id="posAssign"></div>
+        <button class="btn-primary" id="btnLogic">로직 인상액 도출 →</button>
+      </div>
+    </section>
+
+    <!-- 우: 페이밴드 그래프 -->
+    <aside class="comp-right">
+      <h4>페이밴드</h4>
+      <div class="payband" id="payband"></div>
+    </aside>
+  </div>
+
+  <!-- 하단: 로직 인상액 테이블 -->
+  <section class="comp-table-wrap" id="logicTableWrap" style="display:none">
+    <div class="panel-head">
+      <h3>평가 · 보상 관리대장</h3>
+      <button class="btn-ghost" id="btnExport">CSV 내보내기</button>
+    </div>
+    <div class="table-scroll">
+      <table class="logic-table" id="logicTable"></table>
+    </div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
