@@ -185,28 +185,50 @@ function renderPosAssign(){
 }
 function renderPayband(){
   const pb=$('#payband'); pb.innerHTML='';
-  PAYBAND.forEach(band=>{
-    const div=document.createElement('div'); div.className='pb-grade'; div.dataset.g=band.grade;
-    const chips=compState.members.filter(m=>(compState.grades[m.name]||'').startsWith(band.grade))
-      .map(m=>`<span class="pb-chip">${m.name} ${compState.grades[m.name].slice(1)}</span>`).join('');
-    div.innerHTML=`<span class="pb-glabel">${band.grade}</span>
-      <div class="pb-left">${band.yearsAvg}년차</div>
-      <div class="pb-center">${chips}</div>
-      <div class="pb-right">${band.salaryAvg.toLocaleString()}만</div>`;
-    pb.appendChild(div);
+  const wrap=document.createElement('div'); wrap.className='pb-wrap';
+
+  PAYBAND.forEach((band,bi)=>{
+    // 등급 블록 (상/중/하 3개 세부 행)
+    const gradeBlock=document.createElement('div'); gradeBlock.className='pb-block'; gradeBlock.dataset.g=band.grade;
+    // 등급 라벨(좌측 세로)
+    const gLabel=document.createElement('div'); gLabel.className='pb-grade-label';
+    gLabel.innerHTML=`<span class="pb-g">${band.grade}</span><span class="pb-y">${band.years}</span>`;
+    gradeBlock.appendChild(gLabel);
+
+    // 3개 세부 행 (상/중/하)
+    const subWrap=document.createElement('div'); subWrap.className='pb-subwrap';
+    ['상','중','하'].forEach((pos,pi)=>{
+      const row=document.createElement('div'); row.className='pb-subrow'; row.dataset.sub=band.grade+pos;
+      if(pi>0) row.classList.add('pb-dashed'); // 상/중, 중/하 사이 점선
+      // 배치된 인원 칩
+      const chips=compState.members.filter(m=>compState.grades[m.name]===band.grade+pos)
+        .map(m=>`<span class="pb-chip">${m.name}</span>`).join('');
+      row.innerHTML=`<span class="pb-sublabel">${band.grade}${pos}</span>
+        <span class="pb-chips">${chips}</span>
+        <span class="pb-subsalary">${band.sub[pos].toLocaleString()}만</span>`;
+      subWrap.appendChild(row);
+    });
+    gradeBlock.appendChild(subWrap);
+    wrap.appendChild(gradeBlock);
+
+    // 등급 경계선 (마지막 등급 제외 매 등급 아래)
+    const bd=PB_BOUNDARIES.find(b=>b.top===band.grade);
+    if(bd){
+      const line=document.createElement('div'); line.className='pb-boundary';
+      line.innerHTML=`<span class="pb-bd-year">${bd.year}</span>
+        <span class="pb-bd-mid">${bd.bot? band.grade+' / '+bd.bot+' 경계':''}</span>
+        <span class="pb-bd-salary">${bd.salary.toLocaleString()}만</span>`;
+      wrap.appendChild(line);
+    }
   });
+  pb.appendChild(wrap);
 }
-// 세부등급 → 추천 연봉 (등급 대표값 ± 상/중/하 보간)
+// 세부등급(예: A상) → 추천 연봉 (PAYBAND의 sub에서 직접 조회)
 function gradeToSalary(sub){
   if(!sub) return null;
   const g=sub[0], pos=sub.slice(1);
-  const idx=PAYBAND.findIndex(b=>b.grade===g); if(idx<0) return null;
-  const cur=PAYBAND[idx].salaryAvg;
-  const up=idx>0?PAYBAND[idx-1].salaryAvg:cur+1500;
-  const dn=idx<PAYBAND.length-1?PAYBAND[idx+1].salaryAvg:cur-1500;
-  if(pos==='상') return Math.round((cur+up)/2);
-  if(pos==='하') return Math.round((cur+dn)/2);
-  return cur;
+  const band=PAYBAND.find(b=>b.grade===g); if(!band) return null;
+  return band.sub[pos] ?? band.sub['중'];
 }
 function showLogicTable(){
   compState.logicShown=true; setStep(3);
@@ -224,12 +246,16 @@ function showLogicTable(){
       <td>${emp.prevSalary.toLocaleString()}</td><td class="t-pos">${grade||'-'}</td>
       <td>${rec!=null?rec.toLocaleString():'-'}</td>
       <td class="t-logic ${logic>=0?'money-pos':'money-neg'}">${rec!=null?fmtMoney(logic):'-'}</td>
-      <td><input class="adj adj-org" type="number" value="0" step="10"></td>
-      <td class="ceo-cell"><input class="adj adj-ceo" type="number" value="0" step="10"></td>
+      <td><input class="adj adj-org" type="number" value="0" step="50"></td>
+      <td class="ceo-cell"><input class="adj adj-ceo" type="number" value="0" step="50"></td>
       <td class="t-final">-</td><td class="t-fsal">-</td>`;
     tb.appendChild(tr);
+    const snap50=v=>Math.round(v/50)*50;
     const recalc=()=>{
-      const org=+$('.adj-org',tr).value||0, ceo=+$('.adj-ceo',tr).value||0;
+      let org=snap50(+$('.adj-org',tr).value||0), ceo=snap50(+$('.adj-ceo',tr).value||0);
+      // 스냅된 값을 입력창에 반영(사용자가 50단위 아닌 값 넣으면 보정)
+      if((+$('.adj-org',tr).value||0)!==org) $('.adj-org',tr).value=org;
+      if((+$('.adj-ceo',tr).value||0)!==ceo) $('.adj-ceo',tr).value=ceo;
       const finalInc=logic+org+ceo; const finalSal=emp.prevSalary+finalInc;
       $('.t-final',tr).textContent=fmtMoney(finalInc);
       $('.t-final',tr).className='t-final '+(finalInc>=0?'money-pos':'money-neg');
@@ -243,9 +269,20 @@ function showLogicTable(){
 function setStep(n){ $$('.step').forEach(s=>{ const sn=+s.dataset.step;
   s.classList.toggle('active',sn===n); s.classList.toggle('done',sn<n); }); }
 function exportCSV(){
-  const rows=[['우열','피평가자','직전등급','기존연봉','금번등급','연봉추천','로직인상액','조직장보정','CEO보정','최종인상액','최종연봉']];
+  // 화면 테이블 헤더에 조직 정보(그룹/팀/파트/직무)를 우열 우측에 삽입
+  const header=['우열','그룹','팀','파트','직무','피평가자','직전등급','기존연봉','금번등급','연봉추천','로직인상액','조직장보정','CEO보정','최종인상액','최종연봉'];
+  const rows=[header];
   $$('#logicTable tbody tr').forEach(tr=>{
-    rows.push($$('td',tr).map(td=>{ const inp=$('input',td); return inp?inp.value:td.textContent.trim(); }));
+    const name=tr.dataset.name;
+    const m=allMembers().find(x=>x.name===name)||{};
+    const cells=$$('td',tr).map(td=>{ const inp=$('input',td); return inp?inp.value:td.textContent.trim(); });
+    // cells = [우열, 피평가자, 직전등급, 기존연봉, 금번등급, 연봉추천, 로직인상액, 조직장보정, CEO보정, 최종인상액, 최종연봉]
+    const row=[
+      cells[0],                          // 우열
+      m.group||'', m.team||'', m.part||'-', m.job||'',  // 조직 정보
+      ...cells.slice(1)                  // 나머지 (피평가자~최종연봉)
+    ];
+    rows.push(row);
   });
   const csv=rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv'}); const a=document.createElement('a');

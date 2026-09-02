@@ -56,13 +56,22 @@ const ITEMS = {
   ]
 };
 
-// 페이밴드 (직무 무관 공통 예시 — 실제론 직무별로 둠)
+// 페이밴드 (경계선 방식) — 등급 경계에 연차·연봉을 찍고, 각 등급 상/중/하에 평균연봉 표기
+// 연차: D 1~2 / C 3~4 / B 5~6 / A 7~8 / S 9+
 const PAYBAND = [
-  {grade:"S", label:"S (최상위)", yearsAvg:9, salaryAvg:9500},
-  {grade:"A", label:"A (상위)",   yearsAvg:7, salaryAvg:7800},
-  {grade:"B", label:"B (중위)",   yearsAvg:5, salaryAvg:6200},
-  {grade:"C", label:"C (하위)",   yearsAvg:3, salaryAvg:4800},
-  {grade:"D", label:"D (최하위)", yearsAvg:1, salaryAvg:3600}
+  {grade:"S", years:"9년차 이상", sub:{상:10500, 중:9500, 하:8800}},
+  {grade:"A", years:"7~8년차",   sub:{상:8300,  중:7800, 하:7300}},
+  {grade:"B", years:"5~6년차",   sub:{상:6800,  중:6200, 하:5700}},
+  {grade:"C", years:"3~4년차",   sub:{상:5300,  중:4800, 하:4300}},
+  {grade:"D", years:"1~2년차",   sub:{상:4000,  중:3600, 하:3200}}
+];
+// 등급 사이 경계 (수직선 눈금: 좌=연차, 우=연봉). 위에서 아래로.
+const PB_BOUNDARIES = [
+  {top:"S", bot:"A", year:"9년차", salary:8800},
+  {top:"A", bot:"B", year:"7년차", salary:7300},
+  {top:"B", bot:"C", year:"5년차", salary:5700},
+  {top:"C", bot:"D", year:"3년차", salary:4300},
+  {top:"D", bot:null, year:"1년차", salary:3200}
 ];
 // 세부 등급(S상~D하): 각 등급을 상/중/하로
 const SUBGRADES = [];

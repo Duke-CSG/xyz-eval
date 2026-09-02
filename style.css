@@ -138,19 +138,32 @@ select,input{font-family:inherit;font-size:13px}
 .pos-assign-row .pa-name{font-weight:600;min-width:80px}
 .pos-assign-row select{padding:6px 10px;border:1px solid var(--line2);border-radius:6px}
 
-/* 페이밴드 그래프 */
-.payband{position:relative;padding:20px 0}
-.payband-scale{position:relative;margin:0 auto;width:100%}
-.pb-grade{display:flex;align-items:stretch;border:1px solid var(--line2);border-bottom:none;position:relative;min-height:66px}
-.pb-grade:last-child{border-bottom:1px solid var(--line2)}
-.pb-grade .pb-left{width:70px;text-align:right;padding:6px 10px;font-size:10px;color:var(--mid);border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
-.pb-grade .pb-center{flex:1;padding:8px;display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start}
-.pb-grade .pb-right{width:80px;text-align:left;padding:6px 10px;font-size:10px;color:var(--mid);border-left:1px solid var(--line);display:flex;flex-direction:column;justify-content:center}
-.pb-grade .pb-glabel{position:absolute;left:8px;top:4px;font-weight:800;font-size:13px;color:var(--ink)}
-.pb-chip{background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:14px;height:fit-content}
-.pb-s{background:linear-gradient(var(--s4),var(--s4))}
-.pb-grade[data-g="S"]{background:#fafafa}
-.pb-grade[data-g="A"]{background:#fbfbfb}
+/* 페이밴드 그래프 (경계선 방식) */
+.payband{position:relative;padding:8px 0 20px}
+.pb-wrap{border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.pb-block{display:flex;align-items:stretch;position:relative}
+.pb-block[data-g="S"]{background:#fafafa}
+.pb-block[data-g="A"]{background:#fcfcfc}
+.pb-grade-label{width:64px;flex-shrink:0;border-right:1px solid var(--line);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2px;padding:6px 4px;background:rgba(0,0,0,.015)}
+.pb-grade-label .pb-g{font-size:18px;font-weight:900;color:var(--ink)}
+.pb-grade-label .pb-y{font-size:9px;color:var(--mid);text-align:center;line-height:1.2}
+.pb-subwrap{flex:1;display:flex;flex-direction:column}
+.pb-subrow{display:flex;align-items:center;gap:8px;padding:7px 10px;min-height:34px}
+.pb-subrow.pb-dashed{border-top:1px dashed var(--line2)}
+.pb-sublabel{font-size:10px;font-weight:700;color:var(--lt);width:28px;flex-shrink:0}
+.pb-chips{flex:1;display:flex;flex-wrap:wrap;gap:4px}
+.pb-subsalary{font-size:10.5px;color:var(--mid);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.pb-chip{background:var(--navy);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px}
+/* 등급 경계선 (실선 + 좌우 연차/연봉) */
+.pb-boundary{display:flex;align-items:center;height:0;position:relative;border-top:2px solid var(--ink);
+  margin:0;z-index:2}
+.pb-boundary .pb-bd-year{position:absolute;left:0;top:-9px;background:var(--ink);color:#fff;
+  font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:3px}
+.pb-boundary .pb-bd-mid{position:absolute;left:50%;top:-8px;transform:translateX(-50%);
+  font-size:9px;color:var(--mid);background:var(--bg);padding:0 6px}
+.pb-boundary .pb-bd-salary{position:absolute;right:0;top:-9px;background:var(--ink);color:#fff;
+  font-size:9.5px;font-weight:700;padding:1px 7px;border-radius:3px;font-variant-numeric:tabular-nums}
 
 /* 로직 테이블 */
 .comp-table-wrap{margin:0 24px 32px;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
