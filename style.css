@@ -113,7 +113,8 @@ select,input{font-family:inherit;font-size:13px}
 .comp-col-left #posSection{flex:1;display:flex;flex-direction:column}
 .comp-col-left #posSection #posAssign{flex:1;align-content:start}
 .comp-col-right{background:var(--bg);border:1px solid var(--line);
-  border-radius:var(--radius);padding:18px;align-self:start;position:sticky;top:84px}
+  border-radius:var(--radius);padding:18px;display:flex;flex-direction:column}
+.comp-col-right .payband{flex:1}
 .comp-col-right h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--ink2)}
 .comp-full{margin:0 24px 32px}
 .comp-section{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
@@ -288,3 +289,14 @@ select,input{font-family:inherit;font-size:13px}
 .st-lg.navy{background:#1E3A5F}.st-lg.amber{background:#B4690E}
 /* 로직 테이블 행 선택 */
 .logic-table tbody tr.row-active td{background:var(--navy-lt) !important}
+
+/* 보정 +/- 버튼 */
+.adj-wrap{display:inline-flex;align-items:center;gap:0;border:1px solid var(--line2);border-radius:7px;overflow:hidden;background:var(--bg)}
+.adj-wrap .adj{width:56px;border:none;border-left:1px solid var(--line);border-right:1px solid var(--line);
+  border-radius:0;text-align:center;padding:5px 2px;font-variant-numeric:tabular-nums}
+.adj-wrap .adj:focus{outline:none;background:var(--navy-lt)}
+.adj-btn{border:none;background:var(--panel2);color:var(--ink2);width:24px;height:30px;
+  font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.adj-btn:hover{background:var(--navy);color:#fff}
+/* 인상률 */
+.logic-table .t-rate{font-weight:800;font-variant-numeric:tabular-nums}

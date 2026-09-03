@@ -363,7 +363,7 @@ function showLogicTable(){
   const t=$('#logicTable');
   t.innerHTML=`<thead><tr>
     <th>우열</th><th>피평가자</th><th>직전등급</th><th>기존연봉</th><th>금번등급</th>
-    <th>연봉추천</th><th>로직인상액</th><th>조직장보정</th><th>CEO보정</th><th>최종인상액</th><th>최종연봉</th>
+    <th>연봉추천</th><th>로직인상액</th><th>조직장보정</th><th>CEO보정</th><th>최종인상액</th><th>최종연봉</th><th>인상률</th>
   </tr></thead><tbody></tbody>`;
   const tb=$('tbody',t);
   compState.members.forEach((m,i)=>{
@@ -374,9 +374,9 @@ function showLogicTable(){
       <td>${emp.prevSalary.toLocaleString()}</td><td class="t-pos">${grade||'-'}</td>
       <td>${rec!=null?rec.toLocaleString():'-'}</td>
       <td class="t-logic ${logic>=0?'money-pos':'money-neg'}">${rec!=null?fmtMoney(logic):'-'}</td>
-      <td><input class="adj adj-org" type="number" value="0" step="50"></td>
-      <td class="ceo-cell"><input class="adj adj-ceo" type="number" value="0" step="50"></td>
-      <td class="t-final">-</td><td class="t-fsal">-</td>`;
+      <td><div class="adj-wrap"><button class="adj-btn adj-minus" data-t="org">−</button><input class="adj adj-org" type="number" value="0" step="50"><button class="adj-btn adj-plus" data-t="org">+</button></div></td>
+      <td class="ceo-cell"><div class="adj-wrap"><button class="adj-btn adj-minus" data-t="ceo">−</button><input class="adj adj-ceo" type="number" value="0" step="50"><button class="adj-btn adj-plus" data-t="ceo">+</button></div></td>
+      <td class="t-final">-</td><td class="t-fsal">-</td><td class="t-rate">-</td>`;
     tb.appendChild(tr);
     const snap50=v=>Math.round(v/50)*50;
     const recalc=()=>{
@@ -387,10 +387,20 @@ function showLogicTable(){
       $('.t-final',tr).textContent=fmtMoney(finalInc);
       $('.t-final',tr).className='t-final '+(finalInc>=0?'money-pos':'money-neg');
       $('.t-fsal',tr).textContent=finalSal.toLocaleString()+'만';
-      // 현재 추이 그래프가 이 인원이면 갱신
+      // 인상률 (기존 대비 최종연봉 비율)
+      const rate=emp.prevSalary>0? ((finalSal/emp.prevSalary-1)*100):0;
+      $('.t-rate',tr).textContent=(rate>=0?'+':'')+rate.toFixed(1)+'%';
+      $('.t-rate',tr).className='t-rate '+(rate>=0?'money-pos':'money-neg');
       if(compState.trendName===m.name) renderSalaryTrend(m.name, finalSal);
     };
     $('.adj-org',tr).oninput=recalc; $('.adj-ceo',tr).oninput=recalc;
+    // +/- 버튼 (50 단위 증감)
+    $$('.adj-btn',tr).forEach(btn=>btn.onclick=(e)=>{
+      e.stopPropagation();
+      const inp=$('.adj-'+btn.dataset.t,tr);
+      const delta=btn.classList.contains('adj-plus')?50:-50;
+      inp.value=(+inp.value||0)+delta; recalc();
+    });
     // 행 클릭 → 추이 그래프
     tr.style.cursor='pointer';
     tr.onclick=(e)=>{ if(e.target.tagName==='INPUT') return;
@@ -454,7 +464,7 @@ function setStep(n){ $$('.step').forEach(s=>{ const sn=+s.dataset.step;
   s.classList.toggle('active',sn===n); s.classList.toggle('done',sn<n); }); }
 function exportCSV(){
   // 화면 테이블 헤더에 조직 정보(그룹/팀/파트/직무)를 우열 우측에 삽입
-  const header=['우열','그룹','팀','파트','직무','피평가자','직전등급','기존연봉','금번등급','연봉추천','로직인상액','조직장보정','CEO보정','최종인상액','최종연봉'];
+  const header=['우열','그룹','팀','파트','직무','피평가자','직전등급','기존연봉','금번등급','연봉추천','로직인상액','조직장보정','CEO보정','최종인상액','최종연봉','인상률'];
   const rows=[header];
   $$('#logicTable tbody tr').forEach(tr=>{
     const name=tr.dataset.name;
