@@ -110,13 +110,12 @@ function renderDistPayband(byGrade){
 }
 function renderDistLines(list){
   const box=$('#distLines');
-  const cats=[['인재상',ITEMS.인재상],['공통역량',ITEMS.공통역량],['직무역량',ITEMS.직무역량]];
+  const cats=[['인재상',ITEMS.인재상,'#EAF0F7','#1E3A5F'],['공통역량',ITEMS.공통역량,'#E6F0EA','#1E6B4F'],['직무역량',ITEMS.직무역량,'#FBF3E6','#B4690E']];
   const allItems=cats.flatMap(([_,arr])=>arr);
-  const W=560,H=240,padL=40,padR=20,padT=20,padB=54;
+  const W=580,H=270,padL=40,padR=20,padT=30,padB=64;
   const n=allItems.length;
   const xStep=(W-padL-padR)/(n-1);
-  const yFor=v=>padT+(H-padT-padB)*(1-(v-1)/3); // 1~4 → y
-  // 각 인원 폴리라인
+  const yFor=v=>padT+(H-padT-padB)*(1-(v-1)/3);
   const colors=['#1E3A5F','#B4690E','#1E6B4F','#8E6FB0','#B03A2E','#3A3A3A','#2E5C8A','#A06520'];
   const memScores=list.map(m=>{
     const e=EVAL[m.name];
@@ -125,25 +124,37 @@ function renderDistLines(list){
       return all.length? all.reduce((a,b)=>a+b.scores[it.id],0)/all.length : null;
     })};
   });
-  // 평균선
   const avgPts=allItems.map((it,i)=>{ const vals=memScores.map(m=>m.pts[i]).filter(v=>v!=null); return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null; });
   let svg=`<svg viewBox="0 0 ${W} ${H}" class="dist-svg">`;
-  // 그리드 (1~4)
-  for(let v=1;v<=4;v++){ const y=yFor(v); svg+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/><text x="${padL-8}" y="${y+3}" text-anchor="end" font-size="9" fill="#9CA3AF">${v}</text>`; }
-  // 각 인원선 (얇게, 반투명)
+  // 섹터 배경 (미세한 컬러) + 라벨
+  let ci=0;
+  cats.forEach(([cat,arr,bg,fg])=>{
+    const startX=padL+ci*xStep - (ci===0?padL:xStep/2);
+    const endX=padL+(ci+arr.length-1)*xStep + (ci+arr.length===n?padR:xStep/2);
+    svg+=`<rect x="${startX}" y="${padT-4}" width="${endX-startX}" height="${H-padT-padB+8}" fill="${bg}" opacity="0.55"/>`;
+    svg+=`<text x="${(startX+endX)/2}" y="${padT-12}" text-anchor="middle" font-size="10" font-weight="700" fill="${fg}">${cat}</text>`;
+    ci+=arr.length;
+  });
+  // 그리드
+  for(let v=1;v<=4;v++){ const y=yFor(v); svg+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#D1D5DB" stroke-width="0.6" opacity="0.6"/><text x="${padL-8}" y="${y+3}" text-anchor="end" font-size="9" fill="#9CA3AF">${v}</text>`; }
+  // 개인선
   memScores.forEach((m,mi)=>{
     const pts=m.pts.map((v,i)=>v!=null?`${padL+i*xStep},${yFor(v)}`:null).filter(Boolean).join(' ');
-    svg+=`<polyline points="${pts}" fill="none" stroke="${colors[mi%colors.length]}" stroke-width="1.5" opacity="0.45"/>`;
+    svg+=`<polyline points="${pts}" fill="none" stroke="${colors[mi%colors.length]}" stroke-width="1.5" opacity="0.4"/>`;
   });
-  // 평균선 (굵게, 검정 점선)
+  // 평균선
   const avgLine=avgPts.map((v,i)=>v!=null?`${padL+i*xStep},${yFor(v)}`:null).filter(Boolean).join(' ');
   svg+=`<polyline points="${avgLine}" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="4 3"/>`;
   avgPts.forEach((v,i)=>{ if(v!=null) svg+=`<circle cx="${padL+i*xStep}" cy="${yFor(v)}" r="3" fill="#1A1A1A"/>`; });
+  // 섹터 경계 세로 점선
+  let bi=0;
+  cats.slice(0,-1).forEach(([_,arr])=>{ bi+=arr.length; const x=padL+(bi-0.5)*xStep;
+    svg+=`<line x1="${x}" y1="${padT-4}" x2="${x}" y2="${H-padB+4}" stroke="#9CA3AF" stroke-width="0.8" stroke-dasharray="2 3"/>`; });
   // x축 라벨
   allItems.forEach((it,i)=>{ const x=padL+i*xStep;
     svg+=`<text x="${x}" y="${H-padB+16}" text-anchor="end" font-size="8.5" fill="#6B7280" transform="rotate(-40 ${x} ${H-padB+16})">${it.name}</text>`; });
   svg+=`</svg>`;
-  box.innerHTML=svg+`<p class="dist-legend"><span style="border-top:2.5px dashed #1A1A1A;display:inline-block;width:20px;vertical-align:middle"></span> 직무 평균 · 얇은 선은 개인별</p>`;
+  box.innerHTML=svg+`<p class="dist-legend"><span style="border-top:2.5px dashed #1A1A1A;display:inline-block;width:20px;vertical-align:middle"></span> 직무 평균 · 얇은 선은 개인별 · 배경색은 역량 구분</p>`;
 }
 
 function showEvalDetail(name){
@@ -247,6 +258,7 @@ function loadCompMembers(){
   list.sort((a,b)=>totalScore(b.name)-totalScore(a.name));
   compState.members=list; compState.grades={}; compState.logicShown=false;
   $('#posSection').style.display=list.length?'block':'none';
+  $('#paybandCol').style.display=list.length?'block':'none';
   $('#logicTableWrap').style.display='none';
   renderRankList(); renderPosAssign(); renderPayband();
   setStep(1);
@@ -313,16 +325,25 @@ function renderPayband(){
     gradeBlock.appendChild(subWrap);
     wrap.appendChild(gradeBlock);
 
-    // 등급 경계선 (마지막 등급 제외 매 등급 아래)
-    const bd=PB_BOUNDARIES.find(b=>b.top===band.grade);
+    // 등급 경계선 (bot이 있는 경계만 = 등급 사이). D하한은 별도 처리
+    const bd=PB_BOUNDARIES.find(b=>b.top===band.grade && b.bot);
     if(bd){
       const line=document.createElement('div'); line.className='pb-boundary';
       line.innerHTML=`<span class="pb-bd-year">${bd.year}</span>
-        <span class="pb-bd-mid">${bd.bot? band.grade+' / '+bd.bot+' 경계':''}</span>
+        <span class="pb-bd-mid">${band.grade} / ${bd.bot} 경계</span>
         <span class="pb-bd-salary">${bd.salary.toLocaleString()}만</span>`;
       wrap.appendChild(line);
     }
   });
+  // D 하한 (컨테이너 맨 아래, 잘리지 않게 내부 행으로)
+  const dLow=PB_BOUNDARIES.find(b=>!b.bot);
+  if(dLow){
+    const foot=document.createElement('div'); foot.className='pb-footline';
+    foot.innerHTML=`<span class="pb-bd-year">${dLow.year}</span>
+      <span class="pb-bd-mid">하한</span>
+      <span class="pb-bd-salary">${dLow.salary.toLocaleString()}만</span>`;
+    wrap.appendChild(foot);
+  }
   pb.appendChild(wrap);
 }
 // 세부등급(예: A상) → 추천 연봉 (PAYBAND의 sub에서 직접 조회)
@@ -355,18 +376,74 @@ function showLogicTable(){
     const snap50=v=>Math.round(v/50)*50;
     const recalc=()=>{
       let org=snap50(+$('.adj-org',tr).value||0), ceo=snap50(+$('.adj-ceo',tr).value||0);
-      // 스냅된 값을 입력창에 반영(사용자가 50단위 아닌 값 넣으면 보정)
       if((+$('.adj-org',tr).value||0)!==org) $('.adj-org',tr).value=org;
       if((+$('.adj-ceo',tr).value||0)!==ceo) $('.adj-ceo',tr).value=ceo;
       const finalInc=logic+org+ceo; const finalSal=emp.prevSalary+finalInc;
       $('.t-final',tr).textContent=fmtMoney(finalInc);
       $('.t-final',tr).className='t-final '+(finalInc>=0?'money-pos':'money-neg');
       $('.t-fsal',tr).textContent=finalSal.toLocaleString()+'만';
+      // 현재 추이 그래프가 이 인원이면 갱신
+      if(compState.trendName===m.name) renderSalaryTrend(m.name, finalSal);
     };
-    $('.adj-org',tr).oninput=recalc; $('.adj-ceo',tr).oninput=recalc; recalc();
+    $('.adj-org',tr).oninput=recalc; $('.adj-ceo',tr).oninput=recalc;
+    // 행 클릭 → 추이 그래프
+    tr.style.cursor='pointer';
+    tr.onclick=(e)=>{ if(e.target.tagName==='INPUT') return;
+      $$('#logicTable tbody tr').forEach(x=>x.classList.remove('row-active'));
+      tr.classList.add('row-active');
+      const finalSal=emp.prevSalary+logic+snap50(+$('.adj-org',tr).value||0)+snap50(+$('.adj-ceo',tr).value||0);
+      compState.trendName=m.name; renderSalaryTrend(m.name, finalSal); };
+    recalc();
   });
   $('#logicTableWrap').style.display='block';
+  // 첫 행 자동 선택
+  const first=$('#logicTable tbody tr'); if(first) first.click();
   $('#logicTableWrap').scrollIntoView({behavior:'smooth'});
+}
+
+// 연봉 변화 추이 그래프 (입사~현재~최종)
+function renderSalaryTrend(name, finalSalary){
+  const emp=EMP[name]; if(!emp) return;
+  $('#salaryTrend').style.display='block';
+  $('#stName').textContent='· '+name;
+  const hist=emp.salaryHistory.slice(); // [[라벨,연봉],...]
+  // 마지막에 '올해 최종' 점 추가 (보정 반영, 실시간 변동)
+  const pts=[...hist.map(([l,v])=>({label:l,val:v,type:'hist'})), {label:'올해 최종',val:finalSalary,type:'final'}];
+  const W=680,H=230,padL=52,padR=30,padT=24,padB=44;
+  const vals=pts.map(p=>p.val);
+  const vmin=Math.min(...vals,3200), vmax=Math.max(...vals,4000);
+  const pad=(vmax-vmin)*0.15||500;
+  const lo=Math.floor((vmin-pad)/100)*100, hi=Math.ceil((vmax+pad)/100)*100;
+  const n=pts.length;
+  const xFor=i=>padL+(W-padL-padR)*(n===1?0.5:i/(n-1));
+  const yFor=v=>padT+(H-padT-padB)*(1-(v-lo)/(hi-lo));
+  let svg=`<svg viewBox="0 0 ${W} ${H}" class="st-svg">`;
+  // y 그리드 (4단계)
+  for(let k=0;k<=4;k++){ const v=lo+(hi-lo)*k/4; const y=yFor(v);
+    svg+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#E5E7EB" stroke-width="1"/>
+    <text x="${padL-8}" y="${y+3}" text-anchor="end" font-size="9" fill="#9CA3AF">${Math.round(v).toLocaleString()}</text>`; }
+  // 이력 선 (실선)
+  const histPts=pts.filter(p=>p.type==='hist');
+  const histLine=histPts.map((p,i)=>`${xFor(i)},${yFor(p.val)}`).join(' ');
+  svg+=`<polyline points="${histLine}" fill="none" stroke="#1E3A5F" stroke-width="2.5"/>`;
+  // 현재→최종 구간 (점선, 강조)
+  const iPrev=histPts.length-1, iFinal=n-1;
+  svg+=`<line x1="${xFor(iPrev)}" y1="${yFor(pts[iPrev].val)}" x2="${xFor(iFinal)}" y2="${yFor(pts[iFinal].val)}" stroke="#B4690E" stroke-width="2.5" stroke-dasharray="4 3"/>`;
+  // 점 + 값
+  pts.forEach((p,i)=>{
+    const x=xFor(i),y=yFor(p.val);
+    const isFinal=p.type==='final';
+    svg+=`<circle cx="${x}" cy="${y}" r="${isFinal?6:4}" fill="${isFinal?'#B4690E':'#1E3A5F'}" ${isFinal?'stroke="#fff" stroke-width="2"':''}/>`;
+    svg+=`<text x="${x}" y="${y-12}" text-anchor="middle" font-size="9.5" font-weight="700" fill="${isFinal?'#B4690E':'#3A3A3A'}">${p.val.toLocaleString()}</text>`;
+    svg+=`<text x="${x}" y="${H-padB+16}" text-anchor="middle" font-size="9" fill="#6B7280">${p.label}</text>`;
+  });
+  svg+=`</svg>`;
+  const totalGrowth=pts[n-1].val-pts[0].val;
+  const pctGrowth=((pts[n-1].val/pts[0].val-1)*100).toFixed(0);
+  $('#stChart').innerHTML=svg+`<p class="st-foot">
+    <span class="st-lg navy"></span> 입사~현재 이력 &nbsp;
+    <span class="st-lg amber"></span> 올해 최종(보정 반영) &nbsp; · &nbsp;
+    입사 대비 <b>${totalGrowth>=0?'+':''}${totalGrowth.toLocaleString()}만 (${pctGrowth}%)</b></p>`;
 }
 function setStep(n){ $$('.step').forEach(s=>{ const sn=+s.dataset.step;
   s.classList.toggle('active',sn===n); s.classList.toggle('done',sn<n); }); }

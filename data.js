@@ -77,12 +77,32 @@ const PB_BOUNDARIES = [
 const SUBGRADES = [];
 ["S","A","B","C","D"].forEach(g=>["상","중","하"].forEach(s=>SUBGRADES.push(g+s)));
 
-// 기존 연봉·직전등급 (샘플)
-const EMP = {}; 
-Object.keys(JOB).forEach((name,i)=>{
-  const base=3600+((i*370)%5800);
-  EMP[name]={ prevSalary: base, prevGrade: ["A중","B상","B중","B하","C상","C중"][i%6] };
-});
+// 기존 연봉·직전등급·연봉이력 (샘플) — 페이밴드 범위(3,200~10,500만) 내
+// salaryHistory: 입사~현재까지 [연차라벨, 연봉] (추이 그래프용)
+const EMP = {};
+(function(){
+  // 이름별로 입사연차와 시작연봉을 다양하게 부여
+  const seed=(s)=>{ let x=Math.sin(s)*10000; return x-Math.floor(x); };
+  const prevGrades=["A중","B상","B중","B하","C상","C중","C하","A하"];
+  Object.keys(JOB).forEach((name,i)=>{
+    const years=2+Math.floor(seed(i+1)*6);          // 재직 2~7년차
+    const startSal=3200+Math.floor(seed(i+7)*900);   // 입사 연봉 3,200~4,100
+    // 연차별 인상 이력 생성 (매년 6~14% 인상)
+    const hist=[["입사",startSal]];
+    let cur=startSal;
+    for(let y=1;y<years;y++){
+      const raise=1+(0.06+seed(i*10+y)*0.08);
+      cur=Math.round(cur*raise/10)*10;
+      hist.push([y+"년차",cur]);
+    }
+    EMP[name]={
+      prevSalary: cur,                    // 현재(직전) 연봉
+      prevGrade: prevGrades[i%prevGrades.length],
+      years,
+      salaryHistory: hist
+    };
+  });
+})();
 
 // 평가 데이터 생성 (하향/동료/셀프/협업) — 각 문항 4점 척도
 function seedEval(){

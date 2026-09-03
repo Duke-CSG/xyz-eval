@@ -65,45 +65,51 @@
     </div>
   </div>
 
-  <div class="comp-body-v2">
-    <!-- Ⅰ. 역량우열 확정 (전체 폭) -->
-    <section class="comp-section">
-      <div class="panel-head">
-        <h3><span class="rn">Ⅰ</span> 역량우열 확정 <small>동일 직무자 · 종합점수 순 · 드래그로 보정</small></h3>
-        <button class="btn-ghost" id="btnGroupToggle">같은 포지션 묶기</button>
-      </div>
-      <ol class="rank-list" id="rankList"></ol>
-    </section>
-
-    <!-- Ⅱ. 역량 Positioning 확정 (좌: 등급지정 / 우: 페이밴드) -->
-    <section class="comp-section" id="posSection" style="display:none">
-      <div class="panel-head">
-        <h3><span class="rn">Ⅱ</span> 역량 Positioning 확정 <small>우등자부터 S상~D하 지정 → 페이밴드 배치</small></h3>
-        <button class="btn-primary btn-inline" id="btnLogic">연봉인상액 도출 →</button>
-      </div>
-      <div class="pos-layout">
-        <div class="pos-left">
-          <p class="pos-guide">우등자부터 순서대로 역량 등급을 지정하세요. 지정하면 우측 페이밴드에 배치됩니다.</p>
-          <div id="posAssign"></div>
+  <div class="comp-body-v3">
+    <!-- 좌측: 위=역량우열, 아래=등급지정 -->
+    <div class="comp-col-left">
+      <section class="comp-section" id="rankSection">
+        <div class="panel-head">
+          <h3><span class="rn">Ⅰ</span> 역량우열 확정 <small>종합점수 순 · 드래그로 보정</small></h3>
+          <button class="btn-ghost" id="btnGroupToggle">같은 포지션 묶기</button>
         </div>
-        <div class="pos-right">
-          <h4>페이밴드</h4>
-          <div class="payband" id="payband"></div>
-        </div>
-      </div>
-    </section>
+        <ol class="rank-list" id="rankList"></ol>
+      </section>
 
-    <!-- Ⅲ. 연봉인상액 확정 (전체 폭) -->
-    <section class="comp-section" id="logicTableWrap" style="display:none">
-      <div class="panel-head">
-        <h3><span class="rn">Ⅲ</span> 연봉인상액 확정 <small>로직 인상액 → 조직장·CEO 보정 → 최종 확정</small></h3>
-        <button class="btn-ghost" id="btnExport">CSV 내보내기</button>
-      </div>
-      <div class="table-scroll">
-        <table class="logic-table" id="logicTable"></table>
-      </div>
-    </section>
+      <section class="comp-section" id="posSection" style="display:none">
+        <div class="panel-head">
+          <h3><span class="rn">Ⅱ</span> 역량 Positioning 확정 <small>우등자부터 S상~D하 지정</small></h3>
+          <button class="btn-primary btn-inline" id="btnLogic">연봉인상액 도출 →</button>
+        </div>
+        <p class="pos-guide">우등자부터 순서대로 역량 등급을 지정하세요. 지정하면 우측 페이밴드에 배치됩니다.</p>
+        <div id="posAssign"></div>
+      </section>
+    </div>
+
+    <!-- 우측: 페이밴드 (세로로 길게) -->
+    <aside class="comp-col-right" id="paybandCol" style="display:none">
+      <h4>페이밴드</h4>
+      <div class="payband" id="payband"></div>
+    </aside>
   </div>
+
+  <!-- Ⅲ. 연봉인상액 확정 (전체 폭) -->
+  <section class="comp-section comp-full" id="logicTableWrap" style="display:none">
+    <div class="panel-head">
+      <h3><span class="rn">Ⅲ</span> 연봉인상액 확정 <small>로직 인상액 → 조직장·CEO 보정 → 최종 확정</small></h3>
+      <button class="btn-ghost" id="btnExport">CSV 내보내기</button>
+    </div>
+    <div class="table-scroll">
+      <table class="logic-table" id="logicTable"></table>
+    </div>
+    <div class="salary-trend" id="salaryTrend" style="display:none">
+      <div class="st-head">
+        <h4>연봉 변화 추이 <small id="stName"></small></h4>
+        <span class="st-hint">행을 클릭하면 해당 인원의 추이를 봅니다 · 마지막 점은 보정에 따라 실시간 변동</span>
+      </div>
+      <div id="stChart"></div>
+    </div>
+  </section>
 </main>
 
 <script src="data.js"></script>
