@@ -287,6 +287,11 @@ function addDrag(li){
 }
 function renderPosAssign(){
   const box=$('#posAssign'); box.innerHTML='';
+  const n=compState.members.length;
+  // 세로 우선: 2열 기준, 행 수 = ceil(n/2). grid-auto-flow:column + rows 지정
+  const rows=Math.ceil(n/2);
+  box.style.gridTemplateRows=`repeat(${rows}, auto)`;
+  box.style.gridAutoFlow='column';
   compState.members.forEach((m,i)=>{
     const row=document.createElement('div'); row.className='pos-assign-row';
     const sel=document.createElement('select');

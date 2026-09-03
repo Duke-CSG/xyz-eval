@@ -108,10 +108,12 @@ select,input{font-family:inherit;font-size:13px}
 .step.done{background:var(--green-lt);color:var(--green)}
 
 /* 보상 탭 — 좌(우열+등급지정) / 우(페이밴드 세로) 레이아웃 */
-.comp-body-v3{padding:24px;display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+.comp-body-v3{padding:24px;display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:stretch}
 .comp-col-left{display:flex;flex-direction:column;gap:20px;min-width:0}
-.comp-col-right{position:sticky;top:84px;background:var(--bg);border:1px solid var(--line);
-  border-radius:var(--radius);padding:18px}
+.comp-col-left #posSection{flex:1;display:flex;flex-direction:column}
+.comp-col-left #posSection #posAssign{flex:1;align-content:start}
+.comp-col-right{background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--radius);padding:18px;align-self:start;position:sticky;top:84px}
 .comp-col-right h4{font-size:13px;font-weight:700;margin-bottom:12px;color:var(--ink2)}
 .comp-full{margin:0 24px 32px}
 .comp-section{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
@@ -143,7 +145,7 @@ select,input{font-family:inherit;font-size:13px}
 .rank-group-sep::after{content:"같은 포지션";position:absolute;right:0;top:-9px;background:var(--bg);
   padding:0 8px;font-size:10px;color:var(--amber);font-weight:700}
 
-/* 포지셔닝 지정 행 (2열 그리드로 컴팩트) */
+/* 포지셔닝 지정 행 (2열, 세로 우선 배치 — 행수는 JS가 지정) */
 #posAssign{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
 .pos-assign-row{display:flex;align-items:center;gap:10px;padding:4px 0}
 .pos-assign-row .pa-name{font-weight:600;min-width:60px;font-size:13px}
