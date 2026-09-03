@@ -1,44 +1,36 @@
-# XYZ 평가·보상 시스템
+# XYZ HR Portal
 
-GitHub Pages로 호스팅하는 정적 평가·보상 관리 도구입니다.
+XYZ 인사 통합 포털. GitHub Pages 정적 호스팅.
 
 ## 구성
-- `index.html` — 메인 페이지
-- `style.css` — 스타일
-- `app.js` — 인터랙션 로직 (평가 조회 / 보상 의사결정)
-- `data.js` — **조직·인원·평가·페이밴드 데이터** (실제 운영 시 이 파일만 교체)
+- `index.html` — 메인 (3개 탭)
+- `hr.css` — 스타일
+- `hr.js` — MVC 렌더링 + 채용 대시보드 로직
+- `data.js` — 채용 데이터 + 조직도 데이터 (이 파일만 교체하면 갱신)
 
-## 두 개의 탭
-### 1. 평가 조회
-- 팀·직무 선택(드롭다운+검색) → 피평가자 목록
-- 피평가자 선택 → 종합점수 + 하향/동료/본인/협업 4구획 + 문항별 그래프(직무 평균 대비)
-- 문항별 보기 / 평가자별 보기 전환
+## 3개 탭
+1. **홈 · MVC** — 전사 Mission·Vision·Core Value 5개 + 조직별 미션
+2. **평가 · 보상** — duke-csg.github.io/xyz-eval 를 iframe으로 임베드
+3. **채용 현황** — 채용 대시보드 (KPI · 진단 매트릭스 · 지원자 추이 · 전형 퍼널 · 채용 목록)
 
-### 2. 보상 의사결정
-- 동일 직무자 종합점수 순 우열 표시 → **드래그로 보정**
-- 역량 포지셔닝(S상~D하 지정) → 우측 페이밴드 그래프에 자동 배치
-- 로직 인상액 도출 → 관리대장 테이블 (연봉추천·로직인상액 자동 산출)
-- 조직장·CEO 보정 입력 → 최종 인상액·최종 연봉 실시간 계산
-- CSV 내보내기
+## 배포 방법 (별도 저장소 권장)
+평가·보상(xyz-eval)과 다른 새 저장소를 만드세요. 예: `xyz-hr`
 
-## GitHub Pages 배포 방법
-1. GitHub에 새 저장소 생성 (예: `xyz-eval`)
-2. `site/` 폴더의 모든 파일을 저장소 루트에 업로드
-3. 저장소 Settings → Pages → Source를 `main` 브랜치 `/root`로 설정
-4. 몇 분 후 `https://<사용자명>.github.io/xyz-eval/` 로 접속
+1. GitHub에서 새 저장소 `xyz-hr` 생성 (Public)
+2. `hr-portal/` 폴더 안의 파일 4개를 저장소 루트에 업로드
+   (index.html, hr.css, hr.js, data.js)
+3. Settings → Pages → Branch: main / root → Save
+4. `https://duke-csg.github.io/xyz-hr/` 로 접속
 
-## 데이터 교체 (실제 운영)
-`data.js`의 다음을 실제 값으로 교체:
-- `ORG` : 그룹·팀·인원
-- `JOB` : 인원별 직무
-- `ITEMS` : 평가 문항
-- `PAYBAND` : 직무별 페이밴드(연차·연봉)
-- `EMP` : 인원별 기존 연봉·직전 등급
-- `EVAL` : 평가 결과 (현재는 `seedEval()`로 샘플 생성 — 실제 데이터로 대체)
+## 평가·보상 임베드
+- 홈포털의 "평가·보상" 탭은 `https://duke-csg.github.io/xyz-eval/`를 iframe으로 불러옵니다.
+- GitHub Pages는 iframe 임베드를 허용하므로 정상 작동합니다.
+- xyz-eval 주소가 바뀌면 index.html의 iframe src와 링크를 수정하세요.
 
-## 데이터 수집 방식 (현재: 브라우저 로컬)
-현재는 프로토타입으로 `data.js`에 내장된 샘플로 동작합니다.
-실제 운영 시 평가 수집은 아래 중 택1로 확장 가능:
-- **파일 취합**: 평가자별 결과 JSON을 취합해 `EVAL`에 반영
-- **Google Form 연동**: 폼 응답을 CSV로 받아 변환
-- **GitHub API**: 제출 시 자동 커밋 (토큰 필요)
+## 채용 데이터 갱신
+`data.js`의 `RECRUIT` 객체를 최신 엑셀에서 추출한 값으로 교체.
+구조: reqs(채용요청), funnel(전형), quad(사분면), trend(지원자추이)
+
+## 주의 (인사 데이터)
+채용 데이터에 실제 지원자 개인정보는 없지만, 채용 계획(직무·소요일 등)이 
+포함됩니다. 민감하면 Private 저장소 + 유료 플랜 또는 사내 호스팅을 고려하세요.
