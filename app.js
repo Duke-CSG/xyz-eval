@@ -380,20 +380,21 @@ function showLogicTable(){
     tb.appendChild(tr);
     const snap50=v=>Math.round(v/50)*50;
     const recalc=()=>{
-      let org=snap50(+$('.adj-org',tr).value||0), ceo=snap50(+$('.adj-ceo',tr).value||0);
-      if((+$('.adj-org',tr).value||0)!==org) $('.adj-org',tr).value=org;
-      if((+$('.adj-ceo',tr).value||0)!==ceo) $('.adj-ceo',tr).value=ceo;
+      // 입력 중에는 원본 값 그대로 사용 (덮어쓰지 않음 → 직접 입력 가능)
+      const org=+$('.adj-org',tr).value||0, ceo=+$('.adj-ceo',tr).value||0;
       const finalInc=logic+org+ceo; const finalSal=emp.prevSalary+finalInc;
       $('.t-final',tr).textContent=fmtMoney(finalInc);
       $('.t-final',tr).className='t-final '+(finalInc>=0?'money-pos':'money-neg');
       $('.t-fsal',tr).textContent=finalSal.toLocaleString()+'만';
-      // 인상률 (기존 대비 최종연봉 비율)
       const rate=emp.prevSalary>0? ((finalSal/emp.prevSalary-1)*100):0;
       $('.t-rate',tr).textContent=(rate>=0?'+':'')+rate.toFixed(1)+'%';
       $('.t-rate',tr).className='t-rate '+(rate>=0?'money-pos':'money-neg');
       if(compState.trendName===m.name) renderSalaryTrend(m.name, finalSal);
     };
+    // 입력 완료 시(blur/change)에만 50단위로 스냅
+    const snapField=(cls)=>{ const inp=$('.'+cls,tr); const v=+inp.value||0; inp.value=snap50(v); recalc(); };
     $('.adj-org',tr).oninput=recalc; $('.adj-ceo',tr).oninput=recalc;
+    $('.adj-org',tr).onchange=()=>snapField('adj-org'); $('.adj-ceo',tr).onchange=()=>snapField('adj-ceo');
     // +/- 버튼 (50 단위 증감)
     $$('.adj-btn',tr).forEach(btn=>btn.onclick=(e)=>{
       e.stopPropagation();

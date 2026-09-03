@@ -3,129 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XYZ HR Portal</title>
+<title>XYZ 평가·보상 시스템</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
-<link rel="stylesheet" href="hr.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="topbar">
   <div class="brand">
     <span class="brand-mark">XYZ</span>
-    <span class="brand-title">HR Portal</span>
+    <span class="brand-title">평가 · 보상 시스템</span>
+    <span class="brand-period">2025 하반기</span>
   </div>
   <nav class="mainnav">
-    <button class="navtab active" data-tab="home">홈 · MVC</button>
-    <button class="navtab" data-tab="eval">평가 · 보상</button>
-    <button class="navtab" data-tab="recruit">인력 현황</button>
+    <button class="navtab active" data-tab="eval">평가 조회</button>
+    <button class="navtab" data-tab="comp">보상 의사결정</button>
   </nav>
-  <div class="brand-sub">인사총무팀</div>
 </header>
 
-<!-- ===== 홈 · MVC ===== -->
-<main id="tab-home" class="tab-panel active">
-  <section class="hero">
-    <div class="hero-inner">
-      <p class="hero-eyebrow">XYZ · Mission · Vision · Core Value</p>
-      <h1 class="hero-mission">일상의 공간에 지능형 로봇을 보급하여,<br>사람이 반복 노동에서 벗어나 더 가치 있는 일에 집중하게 한다</h1>
-      <p class="hero-en">We Invent Intelligent Robots For Daily Life</p>
-    </div>
-  </section>
-
-  <section class="mvc-block">
-    <div class="mvc-vision">
-      <span class="mvc-label">VISION</span>
-      <p>카페 · 사무실 · 가정 등 일상 공간에서 사람과 함께 일하는 <strong>Physical AI 로봇의 표준</strong>을 만드는 회사</p>
-    </div>
-  </section>
-
-  <section class="mvc-values">
-    <h2 class="sec-title">Core Value</h2>
-    <div class="cv-grid" id="cvGrid"></div>
-  </section>
-
-  <section class="mvc-orgchart">
-    <h2 class="sec-title">조직도 <small>팀·파트를 클릭하면 구성원이 표시됩니다</small></h2>
-    <div class="orgchart" id="orgChart"></div>
-    <div class="org-members" id="orgMembers"></div>
-  </section>
-
-  <section class="mvc-groups">
-    <h2 class="sec-title">조직별 미션 <small>발명 → 보급 → 확장 · 실증 · 토대</small></h2>
-    <div class="group-flow" id="groupFlow"></div>
-  </section>
-</main>
-
-<!-- ===== 평가 · 보상 (임베드) ===== -->
-<main id="tab-eval" class="tab-panel">
-  <div class="embed-bar">
-    <span>평가 · 보상 시스템</span>
-    <a href="https://duke-csg.github.io/xyz-eval/" target="_blank" class="embed-link">↗ 새 창에서 열기</a>
-  </div>
-  <iframe id="evalFrame" class="embed-frame" src="https://duke-csg.github.io/xyz-eval/" title="평가·보상 시스템"></iframe>
-</main>
-
-<!-- ===== 채용 현황 ===== -->
-<main id="tab-recruit" class="tab-panel">
-  <div class="recruit-wrap">
-    <!-- 인력 현황 -->
-    <div class="rec-head"><h2>인력 현황</h2><span class="rec-date">2026-09-03 기준 · 재직 70명</span></div>
-    <div class="workforce-kpi" id="workforceKpi"></div>
-    <div class="workforce-charts" id="workforceCharts"></div>
-
-    <!-- 조직별 인원 면적 그래프 -->
-    <section class="rec-card">
-      <div class="rec-card-head"><h3>조직별 인원 분포</h3><span class="rec-note">면적=인원수 · <span style="color:#B4690E">■</span> 채용중 · <span style="color:#6B7280">■</span> 충원 완료</span></div>
-      <div id="orgTreemap"></div>
-    </section>
-
-    <!-- 채용현황 대시보드 -->
-    <div class="rec-head" style="margin-top:32px"><h2>채용 현황 대시보드</h2><span class="rec-date" id="recDate"></span></div>
-    <div class="rec-head">
-      <h2>채용 현황 대시보드</h2>
-      <span class="rec-date" id="recDate"></span>
-    </div>
-    <div class="kpi-row" id="kpiRow"></div>
-    <div class="job-detail-bar">
-      <label>직무 상세 보기</label>
-      <select id="jobDetailSel"><option value="">직무를 선택하면 현황이 펼쳐집니다</option></select>
-    </div>
-    <div class="job-detail-panel" id="jobDetailPanel" style="display:none"></div>
-
-    <div class="rec-grid">
-      <!-- 사분면 -->
-      <section class="rec-card">
-        <div class="rec-card-head">
-          <h3>채용 진단 매트릭스</h3>
-          <span class="rec-note">X: 소요일 · Y: 지원자수 · 🔴 우하단=장기·저지원</span>
-        </div>
-        <div id="quadChart"></div>
-      </section>
-
-      <!-- 지원자 추이 -->
-      <section class="rec-card">
-        <div class="rec-card-head">
-          <h3>지원자 유입 추이</h3>
-          <span class="rec-note">전 직무 합산 · 주간 누적</span>
-        </div>
-        <div id="trendChart"></div>
-      </section>
-    </div>
-
-
-    <!-- 채용 목록 -->
-    <section class="rec-card">
-      <div class="rec-card-head">
-        <h3>채용 요청 목록</h3>
-        <div class="rec-filter" id="recFilter"></div>
+<!-- ============ 평가 조회 탭 ============ -->
+<main id="tab-eval" class="tab-panel active">
+  <div class="layout">
+    <!-- 좌: 팀/직무 선택 + 피평가자 목록 -->
+    <aside class="sidebar">
+      <div class="field">
+        <label>팀 · 직무 선택</label>
+        <input type="text" id="evalSearch" placeholder="이름·팀·직무 검색" autocomplete="off">
       </div>
-      <div class="table-scroll">
-        <table class="rec-table" id="recTable"></table>
+      <div class="field">
+        <select id="evalGroupSel"><option value="">전체 그룹</option></select>
+        <select id="evalTeamSel"><option value="">전체 팀</option></select>
+        <select id="evalJobSel"><option value="">전체 직무</option></select>
+      </div>
+      <button class="btn-dist" id="btnJobDist">직무 내 역량분포 보기</button>
+      <div class="member-list" id="evalMemberList"></div>
+    </aside>
+
+    <!-- 우: 피평가자 평가 상세 -->
+    <section class="content" id="evalContent">
+      <div class="empty-state">
+        <p>좌측에서 팀·직무를 선택하고 피평가자를 고르세요.</p>
       </div>
     </section>
   </div>
+</main>
+
+<!-- ============ 보상 의사결정 탭 ============ -->
+<main id="tab-comp" class="tab-panel">
+  <div class="comp-toolbar">
+    <div class="field-inline">
+      <label>팀 · 직무</label>
+      <select id="compGroupSel"><option value="">그룹 선택</option></select>
+      <select id="compTeamSel"><option value="">팀 선택</option></select>
+      <select id="compJobSel"><option value="">직무 선택</option></select>
+    </div>
+    <div class="step-indicator">
+      <span class="step active" data-step="1">1. 우열 · 그룹핑</span>
+      <span class="step" data-step="2">2. 역량 포지셔닝</span>
+      <span class="step" data-step="3">3. 로직 인상액</span>
+      <span class="step" data-step="4">4. 보정 · 확정</span>
+    </div>
+  </div>
+
+  <div class="comp-body-v3">
+    <!-- 좌측: 위=역량우열, 아래=등급지정 -->
+    <div class="comp-col-left">
+      <section class="comp-section" id="rankSection">
+        <div class="panel-head">
+          <h3><span class="rn">Ⅰ</span> 역량우열 확정 <small>종합점수 순 · 드래그로 보정</small></h3>
+          <button class="btn-ghost" id="btnGroupToggle">같은 포지션 묶기</button>
+        </div>
+        <ol class="rank-list" id="rankList"></ol>
+      </section>
+
+      <section class="comp-section" id="posSection" style="display:none">
+        <div class="panel-head">
+          <h3><span class="rn">Ⅱ</span> 역량 Positioning 확정 <small>우등자부터 S상~D하 지정</small></h3>
+          <button class="btn-primary btn-inline" id="btnLogic">연봉인상액 도출 →</button>
+        </div>
+        <p class="pos-guide">우등자부터 순서대로 역량 등급을 지정하세요. 지정하면 우측 페이밴드에 배치됩니다.</p>
+        <div id="posAssign"></div>
+      </section>
+    </div>
+
+    <!-- 우측: 페이밴드 (세로로 길게) -->
+    <aside class="comp-col-right" id="paybandCol" style="display:none">
+      <h4>페이밴드</h4>
+      <div class="payband" id="payband"></div>
+    </aside>
+  </div>
+
+  <!-- Ⅲ. 연봉인상액 확정 (전체 폭) -->
+  <section class="comp-section comp-full" id="logicTableWrap" style="display:none">
+    <div class="panel-head">
+      <h3><span class="rn">Ⅲ</span> 연봉인상액 확정 <small>로직 인상액 → 조직장·CEO 보정 → 최종 확정</small></h3>
+      <button class="btn-ghost" id="btnExport">CSV 내보내기</button>
+    </div>
+    <div class="table-scroll">
+      <table class="logic-table" id="logicTable"></table>
+    </div>
+    <div class="salary-trend" id="salaryTrend" style="display:none">
+      <div class="st-head">
+        <h4>연봉 변화 추이 <small id="stName"></small></h4>
+        <span class="st-hint">행을 클릭하면 해당 인원의 추이를 봅니다 · 마지막 점은 보정에 따라 실시간 변동</span>
+      </div>
+      <div id="stChart"></div>
+    </div>
+  </section>
 </main>
 
 <script src="data.js"></script>
-<script src="hr.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

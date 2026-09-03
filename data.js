@@ -1,8 +1,174 @@
-// XYZ 채용 데이터
-const RECRUIT = {"reqs": [{"no": 1, "group": "R&D", "team": "로봇자동화", "job": "자율주행로봇 파트장", "reqDate": "2026-05-08", "requester": "김정현", "approveDate": "2026-05-08", "joinDate": "", "status": "진행중", "days": 118, "diagnosis": "기간초과", "perday": 0.06, "totalApp": 7}, {"no": 2, "group": "경영지원", "team": "인사총무", "job": "총무 담당", "reqDate": "2026-07-02", "requester": "유두곤", "approveDate": "2026-07-03", "joinDate": "", "status": "취소", "days": 62, "diagnosis": "기간초과", "perday": 1.29, "totalApp": 80}, {"no": 3, "group": "경영지원", "team": "재무회계", "job": "재무회계 담당", "reqDate": "2026-05-18", "requester": "김병조", "approveDate": "2026-05-18", "joinDate": "2026-07-16", "status": "완료", "days": 59, "diagnosis": "기간초과", "perday": 0.27, "totalApp": 16}, {"no": 4, "group": "로봇사업", "team": "영업", "job": "세일즈 담당", "reqDate": "2026-06-23", "requester": "송호진", "approveDate": "2026-06-26", "joinDate": "", "status": "진행중", "days": 69, "diagnosis": "기간초과", "perday": 0.58, "totalApp": 40}, {"no": 5, "group": "로봇사업", "team": "영업", "job": "영업 팀장", "reqDate": "2026-06-23", "requester": "송호진", "approveDate": "2026-06-26", "joinDate": "2026-08-07", "status": "취소", "days": 42, "diagnosis": "기간초과", "perday": 0.55, "totalApp": 23}, {"no": 6, "group": "로봇사업", "team": "운영", "job": "AI서비스로봇 A/S 담당", "reqDate": "2026-07-02", "requester": "송호진", "approveDate": "2026-07-03", "joinDate": "", "status": "진행중", "days": 62, "diagnosis": "기간초과", "perday": 0.24, "totalApp": 15}, {"no": 7, "group": "사업전략", "team": "사업개발", "job": "사업개발 팀장", "reqDate": "2026-05-13", "requester": "서원희", "approveDate": "2026-05-13", "joinDate": "", "status": "완료", "days": 113, "diagnosis": "기간초과", "perday": 0.42, "totalApp": 47}, {"no": 8, "group": "사업전략", "team": "정부사업", "job": "정부과제 운영 담당", "reqDate": "2026-05-14", "requester": "서원희", "approveDate": "2026-05-14", "joinDate": "", "status": "진행중", "days": 112, "diagnosis": "기간초과", "perday": 0.43, "totalApp": 48}, {"no": 9, "group": "리테일", "team": "리테일", "job": "점포개발 담당", "reqDate": "2026-07-08", "requester": "손창영", "approveDate": "2026-07-08", "joinDate": "", "status": "진행중", "days": 57, "diagnosis": "기간초과", "perday": 0.32, "totalApp": 18}, {"no": 10, "group": "리테일", "team": "리테일", "job": "프랜차이즈 교육 담당", "reqDate": "2026-07-06", "requester": "손창영", "approveDate": "2026-07-06", "joinDate": "", "status": "진행중", "days": 59, "diagnosis": "기간초과", "perday": 0.22, "totalApp": 13}, {"no": 11, "group": "경영지원", "team": "재무회계", "job": "재무회계 담당", "reqDate": "2026-08-12", "requester": "김병조", "approveDate": "2026-08-13", "joinDate": "", "status": "진행중", "days": 21, "diagnosis": "정상", "perday": 0.76, "totalApp": 16}, {"no": 12, "group": "사업전략", "team": "사업개발", "job": "교육운영 담당", "reqDate": "2026-08-24", "requester": "이완재", "approveDate": "2026-08-25", "joinDate": "", "status": "진행중", "days": 9, "diagnosis": "정상", "perday": 0.33, "totalApp": 3}, {"no": 13, "group": "리테일", "team": "리테일", "job": "라운지엑스 사업/브랜드 총괄 이사", "reqDate": "2026-08-25", "requester": "손창영", "approveDate": "2026-08-25", "joinDate": "", "status": "진행중", "days": 9, "diagnosis": "정상", "perday": 1.89, "totalApp": 17}, {"no": 14, "group": "리테일", "team": "리테일", "job": "슈퍼바이저", "reqDate": "2026-08-24", "requester": "손창영", "approveDate": "2026-08-24", "joinDate": "", "status": "진행중", "days": 10, "diagnosis": "정상", "perday": 0.9, "totalApp": 9}], "funnel": [{"no": 1, "group": "R&D", "team": "로봇자동화", "job": "자율주행로봇 파트장", "total": 7, "서류": 1.0, "1차": 1.0, "2차": 0.0, "처우": 0.0, "입사": 0.0}, {"no": 2, "group": "경영지원", "team": "인사총무", "job": "총무 담당", "total": 80, "서류": 0.0, "1차": 0.0, "2차": 0.0, "처우": 0.0, "입사": 0.0}, {"no": 3, "group": "경영지원", "team": "재무회계", "job": "재무회계 담당", "total": 16, "서류": 20.0, "1차": 11.0, "2차": 3.0, "처우": 1.0, "입사": 1.0}, {"no": 4, "group": "로봇사업", "team": "영업", "job": "세일즈 담당", "total": 40, "서류": 11.0, "1차": 9.0, "2차": 0.0, "처우": 0.0, "입사": 0.0}, {"no": 5, "group": "로봇사업", "team": "영업", "job": "영업 팀장", "total": 23, "서류": 6.0, "1차": 5.0, "2차": 2.0, "처우": 0.0, "입사": 0.0}, {"no": 6, "group": "로봇사업", "team": "운영", "job": "AI서비스로봇 A/S 담당", "total": 15, "서류": 10.0, "1차": 8.0, "2차": 1.0, "처우": 0.0, "입사": 0.0}, {"no": 7, "group": "사업전략", "team": "사업개발", "job": "사업개발 팀장", "total": 47, "서류": 17.0, "1차": 10.0, "2차": 4.0, "처우": 1.0, "입사": 1.0}, {"no": 8, "group": "사업전략", "team": "정부사업", "job": "정부과제 운영 담당", "total": 48, "서류": 20.0, "1차": 11.0, "2차": 2.0, "처우": 0.0, "입사": 0.0}, {"no": 9, "group": "리테일", "team": "리테일", "job": "점포개발 담당", "total": 18, "서류": 2.0, "1차": 1.0, "2차": 0.0, "처우": 0.0, "입사": 0.0}, {"no": 10, "group": "리테일", "team": "리테일", "job": "프랜차이즈 교육 담당", "total": 13, "서류": 2.0, "1차": 0.0, "2차": 0.0, "처우": 0.0, "입사": 0.0}, {"no": 11, "group": "경영지원", "team": "재무회계", "job": "재무회계 담당", "total": 16, "서류": 6.0, "1차": 2.0, "2차": null, "처우": null, "입사": null}, {"no": 12, "group": "사업전략", "team": "사업개발", "job": "교육운영 담당", "total": 3, "서류": null, "1차": null, "2차": null, "처우": null, "입사": null}, {"no": 13, "group": "리테일", "team": "리테일", "job": "라운지엑스 사업/브랜드 총괄 이사", "total": 17, "서류": null, "1차": null, "2차": null, "처우": null, "입사": null}, {"no": 14, "group": "리테일", "team": "리테일", "job": "슈퍼바이저", "total": 9, "서류": 5.0, "1차": 1.0, "2차": null, "처우": null, "입사": null}], "quad": [{"no": 1, "label": "1. 자율주행로봇 파트장", "days": 118, "applicants": 7, "quadrant": 4}, {"no": 2, "label": "2. 총무 담당", "days": 62, "applicants": 80, "quadrant": 1}, {"no": 3, "label": "3. 재무회계 담당", "days": 59, "applicants": 16, "quadrant": 4}, {"no": 4, "label": "4. 세일즈 담당", "days": 69, "applicants": 40, "quadrant": 1}, {"no": 5, "label": "5. 영업 팀장", "days": 42, "applicants": 23, "quadrant": 4}, {"no": 6, "label": "6. AI서비스로봇 A/S 담당", "days": 62, "applicants": 15, "quadrant": 4}, {"no": 7, "label": "7. 사업개발 팀장", "days": 113, "applicants": 47, "quadrant": 1}, {"no": 8, "label": "8. 정부과제 운영 담당", "days": 112, "applicants": 48, "quadrant": 1}, {"no": 9, "label": "9. 점포개발 담당", "days": 57, "applicants": 18, "quadrant": 4}, {"no": 10, "label": "10. 프랜차이즈 교육 담당", "days": 59, "applicants": 13, "quadrant": 4}, {"no": 11, "label": "11. 재무회계 담당", "days": 21, "applicants": 16, "quadrant": 3}, {"no": 12, "label": "12. 교육운영 담당", "days": 9, "applicants": 3, "quadrant": 3}, {"no": 13, "label": "13. 라운지엑스 사업/브랜드 총괄 이사", "days": 9, "applicants": 17, "quadrant": 3}, {"no": 14, "label": "14. 슈퍼바이저", "days": 10, "applicants": 9, "quadrant": 3}], "trend": [{"date": "2026-06-29", "total": 5, "new": 5}, {"date": "2026-07-06", "total": 13, "new": 8}, {"date": "2026-07-13", "total": 14, "new": 1}, {"date": "2026-07-20", "total": 15, "new": 1}, {"date": "2026-07-27", "total": 17, "new": 2}, {"date": "2026-08-03", "total": 17, "new": 0}, {"date": "2026-08-10", "total": 18, "new": 1}, {"date": "2026-08-17", "total": 24, "new": 6}, {"date": "2026-08-24", "total": 33, "new": 9}, {"date": "2026-08-31", "total": 40, "new": 7}]};
+// XYZ 평가·보상 시스템 샘플 데이터
+// 실제 운영 시 이 파일만 교체하면 됨
 
-// XYZ 조직도
-const ORGCHART = {"전략사업그룹": {"lead": "서원희 (이사, 그룹장)", "teams": {"사업개발팀": {"members": [{"name": "조재현", "title": "책임·팀장", "job": "사업개발, 외부과제 협력"}, {"name": "홍준표", "title": "사원", "job": "사업개발 담당"}, {"name": "이완재", "title": "사원", "job": "교육사업 담당"}]}, "정부사업팀": {"members": [{"name": "정부사업 기획/운영", "title": "책임", "job": "정부과제, 과제행정"}]}}}, "경영지원그룹": {"lead": "김병조 (이사, 그룹장·CFO)", "teams": {"재무회계팀": {"members": [{"name": "김진영", "title": "파트장·수석", "job": "재무/회계 관리"}, {"name": "이소리", "title": "선임", "job": "재무/회계 관리"}, {"name": "재무회계", "title": "책임", "job": "재무/회계 관리"}]}, "법무팀": {"members": [{"name": "유두곤", "title": "팀장·책임", "job": "팀장 병행"}]}, "인사총무팀": {"members": [{"name": "윤수민", "title": "선임", "job": "인사/행정 관리"}, {"name": "윤현성", "title": "인턴", "job": "총무"}]}}}, "R&D그룹": {"lead": "황성재 (이사, 그룹장·CEO)", "teams": {"로봇디자인팀": {"lead": "김대광 (팀장, 수석연구원)", "parts": {"UX파트": [{"name": "김준영", "title": "선임연구원", "job": "UX 디자이너"}, {"name": "전한나", "title": "연구원", "job": "UX/UI 디자인 웹"}, {"name": "김지윤", "title": "연구원", "job": "UX/UI 디자인 앱"}], "생산파트": [{"name": "최혁수", "title": "책임연구원", "job": "생산, 구매, 부품관리"}, {"name": "김진오", "title": "선임연구원", "job": "로봇 제품디자인"}, {"name": "박송현", "title": "연구원", "job": "구매, 기구 조립"}, {"name": "김민서", "title": "연구원", "job": "기구설계 엔지니어"}]}}, "로봇지능화팀": {"lead": "원웅재 (팀장, 수석연구원)", "parts": {"에이전틱AI파트": [{"name": "고미종", "title": "파트장·선임", "job": "Agentic AI 개발"}, {"name": "김준호", "title": "연구원", "job": "Agentic AI 개발"}, {"name": "손민", "title": "연구원", "job": "Agentic AI 개발"}, {"name": "정희수", "title": "연구원", "job": "학습 데이터 개발"}, {"name": "전현규", "title": "인턴", "job": "학습 데이터 개발"}, {"name": "민인형", "title": "인턴", "job": "학습 데이터 개발"}], "피지컬AI파트": [{"name": "김재현", "title": "파트장·수석", "job": "Physical AI"}, {"name": "김연준", "title": "수석연구원", "job": "Physical AI"}, {"name": "서원호", "title": "선임연구원", "job": "Physical AI 개발, 제어"}, {"name": "이정욱", "title": "연구원", "job": "모방학습"}, {"name": "이신영", "title": "연구원", "job": "강화학습"}, {"name": "안수진", "title": "연구원", "job": "Isaac Sim"}, {"name": "이정우", "title": "연구원", "job": "Physical AI 개발"}, {"name": "김현지", "title": "인턴", "job": "Physical AI"}]}}, "로봇자동화팀": {"lead": "김정현 (팀장, 수석연구원)", "parts": {"제어파트": [{"name": "김병수", "title": "파트장·선임", "job": "로봇 티칭, 자동화 기구설계"}, {"name": "박민규", "title": "선임연구원", "job": "제어 S/W 개발"}, {"name": "오형욱", "title": "연구원", "job": "제어 엔지니어"}, {"name": "변정욱", "title": "인턴", "job": "제어 엔지니어"}, {"name": "백승호", "title": "인턴", "job": "제어 엔지니어"}, {"name": "김민주", "title": "인턴", "job": "제어 엔지니어"}], "소프트웨어파트": [{"name": "이수열", "title": "파트장·수석", "job": "백엔드 개발"}, {"name": "최용성", "title": "선임연구원", "job": "Flutter 개발자"}, {"name": "정우석", "title": "선임연구원", "job": "Web 개발"}, {"name": "김현국", "title": "선임연구원", "job": "Android 개발"}, {"name": "권민지", "title": "연구원", "job": "백엔드 엔지니어"}, {"name": "안소나", "title": "연구원", "job": "백엔드 개발"}], "자율주행파트": [{"name": "자율주행", "title": "파트장·선임", "job": "자율주행 S/W 개발"}, {"name": "장희동", "title": "선임연구원", "job": "자율주행 S/W 개발"}, {"name": "이태연", "title": "연구원", "job": "자율주행 S/W 개발"}]}}}}, "로봇사업그룹": {"lead": "송호진 (이사, 그룹장)", "teams": {"영업팀": {"members": [{"name": "이채웅", "title": "파트장·선임", "job": "로봇 세일즈"}]}, "마케팅팀": {"members": [{"name": "송지영", "title": "파트장·선임", "job": "마케팅, 컨텐츠 기획"}, {"name": "선영아", "title": "선임", "job": "마케팅 기획, 프로젝트"}, {"name": "장은서", "title": "인턴", "job": "마케팅 지원"}]}, "운영팀": {"parts": {"운영관리파트": [{"name": "박주철", "title": "파트장·책임", "job": "운영 관리 및 기술 지원"}, {"name": "박준형", "title": "선임", "job": "운영 관리"}], "기술지원파트": [{"name": "이정솔", "title": "선임", "job": "기술 지원"}, {"name": "유재하", "title": "선임", "job": "기술 지원, QC"}, {"name": "A/S기사", "title": "선임", "job": "현장 A/S"}]}}}}, "리테일그룹": {"lead": "손창영 (그룹장) · (주)라운지엑스", "teams": {"리테일팀": {"parts": {"리테일기획파트": [{"name": "박용섭", "title": "파트장·책임", "job": "점포 개발, 점주 커뮤니케이션"}, {"name": "강일교", "title": "책임", "job": "오픈바이저(SI)"}, {"name": "서한정", "title": "수석", "job": "상품 개발"}, {"name": "최소리", "title": "선임", "job": "디자인, 이벤트 기획"}, {"name": "리테일 디자이너", "title": "인턴", "job": "디자인 지원"}], "리테일운영파트": [{"name": "서정명", "title": "파트장·선임", "job": "무인 매장 슈퍼바이저"}, {"name": "김선경", "title": "사원", "job": "유인 매장 슈퍼바이저"}, {"name": "김남훈", "title": "사원", "job": "유/무인 매장 슈퍼바이저"}]}}, "로스터리팀": {"lead": "홍성인 (헤드로스터)", "members": [{"name": "박종현", "title": "로스터", "job": ""}, {"name": "서한정", "title": "수석", "job": "상품 개발"}]}}}};
+const ORG = {
+  groups: {
+    "R&D그룹": {
+      teams: {
+        "로봇지능화팀": ["김서연","이준호","박민지"],
+        "로봇자동화팀": ["최우진","정하늘","강도현","윤서준"],
+        "로봇디자인팀": ["임채원","한지우"]
+      }
+    },
+    "로봇사업그룹": {
+      teams: {
+        "영업팀": ["오세훈","신유나"],
+        "운영팀": ["박주철","박준형","유재하"]
+      }
+    },
+    "신사업그룹": {
+      teams: {
+        "사업개발팀": ["남기태","문서영"],
+        "정부사업팀": ["구본우"]
+      }
+    }
+  }
+};
 
-// XYZ 인력현황 통계
-const HRSTAT = {"total": 70, "gender": {"남": 52, "여": 18}, "ageband": {"40대": 18, "30대": 28, "20대": 23, "50대+": 1}, "emptype": {"정규직": 58, "계약직": 3, "인턴": 9}, "rnd": {"비R&D": 37, "R&D": 33}, "groupcount": {"기타": 12, "R&D그룹": 33, "로봇사업그룹": 7, "전략사업그룹": 4, "경영지원그룹": 4, "리테일그룹": 10}, "recruiting": ["경영지원그룹", "리테일그룹", "로봇사업그룹", "전략사업그룹", "R&D그룹"]};
+// 직무 매핑 (동일 직무자 그룹핑용)
+const JOB = {
+  "김서연":"연구개발","이준호":"연구개발","박민지":"연구개발",
+  "최우진":"연구개발","정하늘":"연구개발","강도현":"연구개발","윤서준":"연구개발",
+  "임채원":"디자인","한지우":"디자인",
+  "오세훈":"영업","신유나":"영업",
+  "박주철":"운영","박준형":"운영","유재하":"운영",
+  "남기태":"사업개발","문서영":"사업개발","구본우":"정부사업"
+};
+
+// 평가 문항 (인재상/공통/직무) — 콘텐츠는 이후 확장
+const ITEMS = {
+  "인재상": [
+    {id:"cv1", name:"고객 집착", q:"고객·사용자 관점을 근거로 판단하는가"},
+    {id:"cv2", name:"완결의 그릿", q:"맡은 일을 디테일까지 끝까지 완결하는가"},
+    {id:"cv3", name:"속도와 실행", q:"빠르게 실행하고 현장에서 개선하는가"},
+    {id:"cv4", name:"분석적 사고", q:"데이터·논리로 판단하는가"},
+    {id:"cv5", name:"주도와 팀워크", q:"주도적으로 일하며 팀에 정렬하는가"}
+  ],
+  "공통역량": [
+    {id:"cc1", name:"커뮤니케이션", q:"명확히 소통하고 적시에 공유하는가"},
+    {id:"cc2", name:"문제해결", q:"본질을 파악하고 해결책을 만드는가"},
+    {id:"cc3", name:"자기주도 성장", q:"피드백을 수용하고 개선하는가"}
+  ],
+  "직무역량": [
+    {id:"jc1", name:"직무 전문성", q:"직무 수행에 필요한 전문 지식·노하우를 갖췄는가"},
+    {id:"jc2", name:"성과 창출", q:"기대 성과를 꾸준히 창출하는가"},
+    {id:"jc3", name:"직무 완성도", q:"결과물의 양적·질적 완성도가 높은가"}
+  ]
+};
+
+// 페이밴드 (경계선 방식) — 등급 경계에 연차·연봉을 찍고, 각 등급 상/중/하에 평균연봉 표기
+// 연차: D 1~2 / C 3~4 / B 5~6 / A 7~8 / S 9+
+const PAYBAND = [
+  {grade:"S", years:"9년차 이상", sub:{상:10500, 중:9500, 하:8800}},
+  {grade:"A", years:"7~8년차",   sub:{상:8300,  중:7800, 하:7300}},
+  {grade:"B", years:"5~6년차",   sub:{상:6800,  중:6200, 하:5700}},
+  {grade:"C", years:"3~4년차",   sub:{상:5300,  중:4800, 하:4300}},
+  {grade:"D", years:"1~2년차",   sub:{상:4000,  중:3600, 하:3200}}
+];
+// 등급 사이 경계 (수직선 눈금: 좌=연차, 우=연봉). 위에서 아래로.
+const PB_BOUNDARIES = [
+  {top:"S", bot:"A", year:"9년차", salary:8800},
+  {top:"A", bot:"B", year:"7년차", salary:7300},
+  {top:"B", bot:"C", year:"5년차", salary:5700},
+  {top:"C", bot:"D", year:"3년차", salary:4300},
+  {top:"D", bot:null, year:"1년차", salary:3200}
+];
+// 세부 등급(S상~D하): 각 등급을 상/중/하로
+const SUBGRADES = [];
+["S","A","B","C","D"].forEach(g=>["상","중","하"].forEach(s=>SUBGRADES.push(g+s)));
+
+// 기존 연봉·직전등급·연봉이력 (샘플) — 페이밴드 범위(3,200~10,500만) 내
+// salaryHistory: 입사~현재까지 [연차라벨, 연봉] (추이 그래프용)
+const EMP = {};
+(function(){
+  // 이름별로 입사연차와 시작연봉을 다양하게 부여
+  const seed=(s)=>{ let x=Math.sin(s)*10000; return x-Math.floor(x); };
+  const prevGrades=["A중","B상","B중","B하","C상","C중","C하","A하"];
+  Object.keys(JOB).forEach((name,i)=>{
+    const years=2+Math.floor(seed(i+1)*6);          // 재직 2~7년차
+    const startSal=3200+Math.floor(seed(i+7)*900);   // 입사 연봉 3,200~4,100
+    // 연차별 인상 이력 생성 (매년 6~14% 인상)
+    const hist=[["입사",startSal]];
+    let cur=startSal;
+    for(let y=1;y<years;y++){
+      const raise=1+(0.06+seed(i*10+y)*0.08);
+      cur=Math.round(cur*raise/10)*10;
+      hist.push([y+"년차",cur]);
+    }
+    EMP[name]={
+      prevSalary: cur,                    // 현재(직전) 연봉
+      prevGrade: prevGrades[i%prevGrades.length],
+      years,
+      salaryHistory: hist
+    };
+  });
+})();
+
+// 운영팀(로봇사업그룹) 실제 인원 — 대표이사 보고용 실제값 (근로계약 이력 기반)
+EMP["박주철"]={ prevSalary:4200, prevGrade:"B중", years:5,
+  salaryHistory:[["입사",2800],["1년차",3080],["2년차",3300],["3년차",3800],["4년차",4000],["현재",4200]] };
+EMP["박준형"]={ prevSalary:3650, prevGrade:"C중", years:3,
+  salaryHistory:[["입사",3600],["1년차",3600],["2년차",3650]] };
+EMP["유재하"]={ prevSalary:4000, prevGrade:"C상", years:2,
+  salaryHistory:[["입사",3800],["1년차",3900],["현재",4000]] };
+
+
+// 평가 데이터 생성 (하향/동료/셀프/협업) — 각 문항 4점 척도
+function seedEval(){
+  const rnd=(seed)=>{ let x=Math.sin(seed)*10000; return x-Math.floor(x); };
+  const allItems=[...ITEMS.인재상,...ITEMS.공통역량,...ITEMS.직무역량];
+  const data={}; let s=1;
+  Object.keys(JOB).forEach(target=>{
+    data[target]={ down:[], peer:[], self:null, collab:[] };
+    // 하향식 1명(팀장 가정)
+    const dscore={}; allItems.forEach(it=>{ dscore[it.id]=1+Math.floor(rnd(s++)*4); });
+    data[target].down.push({evaluator:"팀장", scores:dscore, comment:"현장 대응이 안정적이며 협업 태도가 좋음."});
+    // 동료 2명
+    for(let p=0;p<2;p++){ const ps={}; allItems.forEach(it=>{ ps[it.id]=1+Math.floor(rnd(s++)*4); });
+      data[target].peer.push({evaluator:"동료"+(p+1), scores:ps, comment:"맡은 몫을 성실히 수행함."}); }
+    // 셀프
+    const ss={}; allItems.forEach(it=>{ ss[it.id]=2+Math.floor(rnd(s++)*3); });
+    data[target].self={evaluator:"본인", scores:ss, comment:"이번 반기 신규 과제에 주도적으로 참여함."};
+    // 협업자 1명 (일부만)
+    if(rnd(s++)>0.4){ const cs={}; [...ITEMS.인재상.slice(0,2),...ITEMS.공통역량].forEach(it=>{ cs[it.id]=1+Math.floor(rnd(s++)*4); });
+      data[target].collab.push({evaluator:"협업자(타팀)", scores:cs, comment:"협업 과정에서 커뮤니케이션이 명확했음."}); }
+  });
+  return data;
+}
+const EVAL = seedEval();
+
+// 확정된 역량 포지셔닝 (보상 탭에서 확정 → 평가 탭 직무분포에서 조회)
+// 실제 운영 시 이 값도 data.js에 저장하거나 서버 연동. 지금은 세션 내 공유.
+const CONFIRMED_POS = {};  // { 이름: "A상" }
+// 시연용 샘플 확정값 (실제로는 보상탭 인사위원회에서 확정)
+Object.assign(CONFIRMED_POS, {
+  "김서연":"A중","이준호":"B상","박민지":"B하",
+  "최우진":"A상","정하늘":"B중","강도현":"B중","윤서준":"C상",
+  "임채원":"A중","한지우":"C상",
+  "오세훈":"C중","신유나":"C하",
+  "박주철":"B중","박준형":"C중","유재하":"C상",
+  "남기태":"B중","문서영":"C상","구본우":"B하"
+});
+function jobAverage(jobName, itemId){
+  const peers=Object.keys(JOB).filter(n=>JOB[n]===jobName);
+  let sum=0,cnt=0;
+  peers.forEach(n=>{
+    const e=EVAL[n]; if(!e) return;
+    [...e.down,...e.peer,(e.self?[e.self]:[]),...e.collab].flat().forEach(ev=>{
+      if(ev.scores[itemId]!=null){ sum+=ev.scores[itemId]; cnt++; }
+    });
+  });
+  return cnt? (sum/cnt):0;
+}
+
+// 종합점수 (전체 평가자 평균, 협업은 가중치 0.5)
+function totalScore(name){
+  const e=EVAL[name]; if(!e) return 0;
+  let sum=0,w=0;
+  e.down.forEach(ev=>{ const a=avg(ev.scores); sum+=a*1.0; w+=1.0; });
+  e.peer.forEach(ev=>{ const a=avg(ev.scores); sum+=a*1.0; w+=1.0; });
+  if(e.self){ sum+=avg(e.self.scores)*0.5; w+=0.5; }
+  e.collab.forEach(ev=>{ const a=avg(ev.scores); sum+=a*0.5; w+=0.5; });
+  return w? (sum/w):0;
+}
+function avg(scores){ const v=Object.values(scores); return v.length? v.reduce((a,b)=>a+b,0)/v.length:0; }
